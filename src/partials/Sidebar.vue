@@ -49,6 +49,7 @@
                 <stop stop-color="#A5B4FC" stop-opacity="0" offset="0%" />
                 <stop stop-color="#A5B4FC" offset="100%" />
               </linearGradient>
+
               <linearGradient
                 x1="88.638%"
                 y1="29.267%"
@@ -153,45 +154,6 @@
                   <div class="flex items-center">
                     <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
                       <path
-                        class="fill-current text-gray-600"
-                        :class="isExactActive && 'text-indigo-500'"
-                        d="M0 20h24v2H0z"
-                      />
-                      <path
-                        class="fill-current text-gray-400"
-                        :class="isExactActive && 'text-indigo-300'"
-                        d="M4 18h2a1 1 0 001-1V8a1 1 0 00-1-1H4a1 1 0 00-1 1v9a1 1 0 001 1zM11 18h2a1 1 0 001-1V3a1 1 0 00-1-1h-2a1 1 0 00-1 1v14a1 1 0 001 1zM17 12v5a1 1 0 001 1h2a1 1 0 001-1v-5a1 1 0 00-1-1h-2a1 1 0 00-1 1z"
-                      />
-                    </svg>
-                    <span
-                      class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                      >Reports</span
-                    >
-                  </div>
-                </a>
-              </li>
-            </router-link>
-            <!-- E-Commerce  -->
-            <SidebarLinkGroup
-              v-slot="parentLink"
-              :activeCondition="currentRoute.fullPath.includes('/')"
-            >
-              <a
-                class="block text-gray-200 hover:text-white truncate transition duration-150"
-                :class="
-                  currentRoute.fullPath.includes('/') && 'hover:text-gray-200'
-                "
-                href="#0"
-                @click.prevent="
-                  sidebarExpanded
-                    ? parentLink.handleClick()
-                    : (sidebarExpanded = true)
-                "
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                    <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                      <path
                         class="fill-current text-gray-400"
                         :class="
                           currentRoute.fullPath.includes('/') &&
@@ -218,6 +180,52 @@
                     </svg>
                     <span
                       class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                      >Reports</span
+                    >
+                  </div>
+                </a>
+              </li>
+            </router-link>
+            <!-- E-Commerce  -->
+            <SidebarLinkGroup
+              v-slot="parentLink"
+              :activeCondition="this.$route.fullPath.includes('ecommerce')"
+            >
+              <a
+                class="block text-gray-200 hover:text-white truncate transition duration-150"
+                :class="
+                  this.$route.fullPath.includes('eccommerce') &&
+                  'hover:text-gray-200'
+                "
+                href="#0"
+                @click.prevent="
+                  sidebarExpanded
+                    ? parentLink.handleClick()
+                    : (sidebarExpanded = true)
+                "
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
+                      <path
+                        class="fill-current text-gray-600"
+                        :class="
+                          this.$route.fullPath.includes('eccommerce') &&
+                          'text-indigo-500'
+                        "
+                        d="M0 20h24v2H0z"
+                      />
+                      <path
+                        class="fill-current text-gray-400"
+                        :class="
+                          this.$route.fullPath.includes('ecommerce') &&
+                          'text-indigo-300'
+                        "
+                        d="M4 18h2a1 1 0 001-1V8a1 1 0 00-1-1H4a1 1 0 00-1 1v9a1 1 0 001 1zM11 18h2a1 1 0 001-1V3a1 1 0 00-1-1h-2a1 1 0 00-1 1v14a1 1 0 001 1zM17 12v5a1 1 0 001 1h2a1 1 0 001-1v-5a1 1 0 00-1-1h-2a1 1 0 00-1 1z"
+                      />
+                    </svg>
+                    <span
+                      class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
                       >E-Commerce
                     </span>
                   </div>
@@ -235,10 +243,53 @@
               </a>
               <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
                 <ul class="pl-9 mt-1" :class="!parentLink.expanded && 'hidden'">
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/dashboard/ecommerce/invoices"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Invoices</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link
+                    to="/dashboard/ecommerce/payments"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Payments</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -249,10 +300,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -263,10 +319,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -277,10 +338,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -291,10 +357,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -305,10 +376,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -319,10 +395,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >
@@ -376,12 +457,12 @@
             <!-- Users -->
             <SidebarLinkGroup
               v-slot="parentLink"
-              :activeCondition="currentRoute.fullPath.includes('dashboard')"
+              :activeCondition="currentRoute.fullPath.includes('users')"
             >
               <a
                 class="block text-gray-200 hover:text-white truncate transition duration-150"
                 :class="
-                  currentRoute.fullPath.includes('dashboard') &&
+                  currentRoute.fullPath.includes('users') &&
                   'hover:text-gray-200'
                 "
                 href="#0"
@@ -397,7 +478,7 @@
                       <path
                         class="fill-current text-gray-600"
                         :class="
-                          currentRoute.fullPath.includes('dashboard') &&
+                          currentRoute.fullPath.includes('users') &&
                           'text-indigo-500'
                         "
                         d="M18.974 8H22a2 2 0 012 2v6h-2v5a1 1 0 01-1 1h-2a1 1 0 01-1-1v-5h-2v-6a2 2 0 012-2h.974zM20 7a2 2 0 11-.001-3.999A2 2 0 0120 7zM2.974 8H6a2 2 0 012 2v6H6v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5H0v-6a2 2 0 012-2h.974zM4 7a2 2 0 11-.001-3.999A2 2 0 014 7z"
@@ -405,7 +486,7 @@
                       <path
                         class="fill-current text-gray-400"
                         :class="
-                          currentRoute.fullPath.includes('dashboard') &&
+                          currentRoute.fullPath.includes('users') &&
                           'text-indigo-300'
                         "
                         d="M12 6a3 3 0 110-6 3 3 0 010 6zm2 18h-4a1 1 0 01-1-1v-6H6v-6a3 3 0 013-3h6a3 3 0 013 3v6h-3v6a1 1 0 01-1 1z"
@@ -443,7 +524,7 @@
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Team - Tabs</span
+                          >Managers</span
                         >
                       </a>
                     </li>
@@ -457,7 +538,7 @@
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Team - Tiles</span
+                          >Customers</span
                         >
                       </a>
                     </li>
@@ -471,7 +552,161 @@
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Profile</span
+                          >Active Users</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                </ul>
+              </div>
+            </SidebarLinkGroup>
+            <!-- Utility -->
+            <SidebarLinkGroup
+              v-slot="parentLink"
+              :activeCondition="currentRoute.fullPath.includes('utility')"
+            >
+              <a
+                class="block text-gray-200 hover:text-white truncate transition duration-150"
+                :class="
+                  currentRoute.fullPath.includes('utility') &&
+                  'hover:text-gray-200'
+                "
+                href="#0"
+                @click.prevent="
+                  sidebarExpanded
+                    ? parentLink.handleClick()
+                    : (sidebarExpanded = true)
+                "
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
+                      <circle
+                        class="fill-current text-gray-400"
+                        :class="
+                          currentRoute.fullPath.includes('utility') &&
+                          'text-indigo-300'
+                        "
+                        cx="18.5"
+                        cy="5.5"
+                        r="4.5"
+                      />
+                      <circle
+                        class="fill-current text-gray-600"
+                        :class="
+                          currentRoute.fullPath.includes('utility') &&
+                          'text-indigo-500'
+                        "
+                        cx="5.5"
+                        cy="5.5"
+                        r="4.5"
+                      />
+                      <circle
+                        class="fill-current text-gray-600"
+                        :class="
+                          currentRoute.fullPath.includes('utility') &&
+                          'text-indigo-500'
+                        "
+                        cx="18.5"
+                        cy="18.5"
+                        r="4.5"
+                      />
+                      <circle
+                        class="fill-current text-gray-400"
+                        :class="
+                          currentRoute.fullPath.includes('utility') &&
+                          'text-indigo-300'
+                        "
+                        cx="5.5"
+                        cy="18.5"
+                        r="4.5"
+                      />
+                    </svg>
+                    <span
+                      class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                      >Utility</span
+                    >
+                  </div>
+                  <!-- Icon -->
+                  <div class="flex shrink-0 ml-2">
+                    <svg
+                      class="w-3 h-3 shrink-0 ml-1 fill-current text-gray-400"
+                      :class="parentLink.expanded && 'transform rotate-180'"
+                      viewBox="0 0 12 12"
+                    >
+                      <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+              <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                <ul class="pl-9 mt-1" :class="!parentLink.expanded && 'hidden'">
+                  <router-link to="/" custom v-slot="{ href, navigate }">
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Changelog</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link to="/" custom v-slot="{ href, navigate }">
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Roadmap</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link to="/" custom v-slot="{ href, navigate }">
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >FAQs</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link to="/" custom v-slot="{ href, navigate }">
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Empty State</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link to="/" custom v-slot="{ href, navigate }">
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >404</span
                         >
                       </a>
                     </li>
@@ -558,6 +793,43 @@
                 </a>
               </li>
             </router-link>
+            <!-- NAS -->
+            <router-link
+              to="/dashboard/nas/"
+              custom
+              v-slot="{ href, navigate, isExactActive }"
+            >
+              <li
+                class="px-3 py-2 rounded-sm mb-0.5 last:mb-0"
+                :class="isExactActive && 'bg-gray-900'"
+              >
+                <a
+                  class="block text-gray-200 hover:text-white truncate transition duration-150"
+                  :class="isExactActive && 'hover:text-gray-200'"
+                  :href="href"
+                  @click="navigate"
+                >
+                  <div class="flex items-center">
+                    <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
+                      <path
+                        class="fill-current text-gray-600"
+                        :class="isExactActive && 'text-indigo-500'"
+                        d="M1 3h22v20H1z"
+                      />
+                      <path
+                        class="fill-current text-gray-400"
+                        :class="isExactActive && 'text-indigo-300'"
+                        d="M21 3h2v4H1V3h2V1h4v2h10V1h4v2Z"
+                      />
+                    </svg>
+                    <span
+                      class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                      >NAS</span
+                    >
+                  </div>
+                </a>
+              </li>
+            </router-link>
             <!-- Inbox -->
             <router-link
               to="/inbox"
@@ -595,52 +867,15 @@
                 </a>
               </li>
             </router-link>
-            <!-- Calendar -->
-            <router-link
-              to="/"
-              custom
-              v-slot="{ href, navigate, isExactActive }"
-            >
-              <li
-                class="px-3 py-2 rounded-sm mb-0.5 last:mb-0"
-                :class="isExactActive && 'bg-gray-900'"
-              >
-                <a
-                  class="block text-gray-200 hover:text-white truncate transition duration-150"
-                  :class="isExactActive && 'hover:text-gray-200'"
-                  :href="href"
-                  @click="navigate"
-                >
-                  <div class="flex items-center">
-                    <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                      <path
-                        class="fill-current text-gray-600"
-                        :class="isExactActive && 'text-indigo-500'"
-                        d="M1 3h22v20H1z"
-                      />
-                      <path
-                        class="fill-current text-gray-400"
-                        :class="isExactActive && 'text-indigo-300'"
-                        d="M21 3h2v4H1V3h2V1h4v2h10V1h4v2Z"
-                      />
-                    </svg>
-                    <span
-                      class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                      >Calendar</span
-                    >
-                  </div>
-                </a>
-              </li>
-            </router-link>
             <!-- Settings -->
             <SidebarLinkGroup
               v-slot="parentLink"
-              :activeCondition="currentRoute.fullPath.includes('dashboard')"
+              :activeCondition="currentRoute.fullPath.includes('settings')"
             >
               <a
                 class="block text-gray-200 hover:text-white truncate transition duration-150"
                 :class="
-                  currentRoute.fullPath.includes('dashboard') &&
+                  currentRoute.fullPath.includes('settings') &&
                   'hover:text-gray-200'
                 "
                 href="#0"
@@ -656,7 +891,7 @@
                       <path
                         class="fill-current text-gray-600"
                         :class="
-                          currentRoute.fullPath.includes('dashboard') &&
+                          currentRoute.fullPath.includes('settings') &&
                           'text-indigo-500'
                         "
                         d="M19.714 14.7l-7.007 7.007-1.414-1.414 7.007-7.007c-.195-.4-.298-.84-.3-1.286a3 3 0 113 3 2.969 2.969 0 01-1.286-.3z"
@@ -664,7 +899,7 @@
                       <path
                         class="fill-current text-gray-400"
                         :class="
-                          currentRoute.fullPath.includes('dashboard') &&
+                          currentRoute.fullPath.includes('settings') &&
                           'text-indigo-300'
                         "
                         d="M10.714 18.3c.4-.195.84-.298 1.286-.3a3 3 0 11-3 3c.002-.446.105-.885.3-1.286l-6.007-6.007 1.414-1.414 6.007 6.007z"
@@ -672,7 +907,7 @@
                       <path
                         class="fill-current text-gray-600"
                         :class="
-                          currentRoute.fullPath.includes('dashboard') &&
+                          currentRoute.fullPath.includes('settings') &&
                           'text-indigo-500'
                         "
                         d="M5.7 10.714c.195.4.298.84.3 1.286a3 3 0 11-3-3c.446.002.885.105 1.286.3l7.007-7.007 1.414 1.414L5.7 10.714z"
@@ -680,7 +915,7 @@
                       <path
                         class="fill-current text-gray-400"
                         :class="
-                          currentRoute.fullPath.includes('dashboard') &&
+                          currentRoute.fullPath.includes('settings') &&
                           'text-indigo-300'
                         "
                         d="M19.707 9.292a3.012 3.012 0 00-1.415 1.415L13.286 5.7c-.4.195-.84.298-1.286.3a3 3 0 113-3 2.969 2.969 0 01-.3 1.286l5.007 5.006z"
@@ -785,160 +1020,6 @@
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
                           >Give Feedback</span
-                        >
-                      </a>
-                    </li>
-                  </router-link>
-                </ul>
-              </div>
-            </SidebarLinkGroup>
-            <!-- Utility -->
-            <SidebarLinkGroup
-              v-slot="parentLink"
-              :activeCondition="currentRoute.fullPath.includes('dashboard')"
-            >
-              <a
-                class="block text-gray-200 hover:text-white truncate transition duration-150"
-                :class="
-                  currentRoute.fullPath.includes('dashboard') &&
-                  'hover:text-gray-200'
-                "
-                href="#0"
-                @click.prevent="
-                  sidebarExpanded
-                    ? parentLink.handleClick()
-                    : (sidebarExpanded = true)
-                "
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                    <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                      <circle
-                        class="fill-current text-gray-400"
-                        :class="
-                          currentRoute.fullPath.includes('dashboard') &&
-                          'text-indigo-300'
-                        "
-                        cx="18.5"
-                        cy="5.5"
-                        r="4.5"
-                      />
-                      <circle
-                        class="fill-current text-gray-600"
-                        :class="
-                          currentRoute.fullPath.includes('dashboard') &&
-                          'text-indigo-500'
-                        "
-                        cx="5.5"
-                        cy="5.5"
-                        r="4.5"
-                      />
-                      <circle
-                        class="fill-current text-gray-600"
-                        :class="
-                          currentRoute.fullPath.includes('dashboard') &&
-                          'text-indigo-500'
-                        "
-                        cx="18.5"
-                        cy="18.5"
-                        r="4.5"
-                      />
-                      <circle
-                        class="fill-current text-gray-400"
-                        :class="
-                          currentRoute.fullPath.includes('dashboard') &&
-                          'text-indigo-300'
-                        "
-                        cx="5.5"
-                        cy="18.5"
-                        r="4.5"
-                      />
-                    </svg>
-                    <span
-                      class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                      >Utility</span
-                    >
-                  </div>
-                  <!-- Icon -->
-                  <div class="flex shrink-0 ml-2">
-                    <svg
-                      class="w-3 h-3 shrink-0 ml-1 fill-current text-gray-400"
-                      :class="parentLink.expanded && 'transform rotate-180'"
-                      viewBox="0 0 12 12"
-                    >
-                      <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
-                    </svg>
-                  </div>
-                </div>
-              </a>
-              <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                <ul class="pl-9 mt-1" :class="!parentLink.expanded && 'hidden'">
-                  <router-link to="/" custom v-slot="{ href, navigate }">
-                    <li class="mb-1 last:mb-0">
-                      <a
-                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
-                        :href="href"
-                        @click="navigate"
-                      >
-                        <span
-                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Changelog</span
-                        >
-                      </a>
-                    </li>
-                  </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
-                    <li class="mb-1 last:mb-0">
-                      <a
-                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
-                        :href="href"
-                        @click="navigate"
-                      >
-                        <span
-                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Roadmap</span
-                        >
-                      </a>
-                    </li>
-                  </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
-                    <li class="mb-1 last:mb-0">
-                      <a
-                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
-                        :href="href"
-                        @click="navigate"
-                      >
-                        <span
-                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >FAQs</span
-                        >
-                      </a>
-                    </li>
-                  </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
-                    <li class="mb-1 last:mb-0">
-                      <a
-                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
-                        :href="href"
-                        @click="navigate"
-                      >
-                        <span
-                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Empty State</span
-                        >
-                      </a>
-                    </li>
-                  </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
-                    <li class="mb-1 last:mb-0">
-                      <a
-                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
-                        :href="href"
-                        @click="navigate"
-                      >
-                        <span
-                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >404</span
                         >
                       </a>
                     </li>

@@ -4,6 +4,7 @@ export default createStore({
   state: {
     authToken: null,
     authUserCreds: null,
+    bandwidthProfiles: null,
   },
   getters: {
     getAuthToken(state) {
@@ -11,6 +12,9 @@ export default createStore({
     },
     getAuthUser(state) {
       return state.authUserCreds;
+    },
+    getBandwidthProfiles(state) {
+      return state.bandwidthProfiles;
     },
   },
   mutations: {
@@ -20,15 +24,21 @@ export default createStore({
     authUserCreds(state, payload) {
       state.authUserCreds = payload;
     },
+    bandwidthProfiles(state, payload) {
+      state.bandwidthProfiles = payload;
+    },
   },
   actions: {
-    doLogin(state, payload) {
+    doLogin(_, payload) {
       this.commit("authToken", payload.token);
       this.commit("authUserCreds", payload.user);
     },
     doLogout() {
       this.commit("authToken", null);
       this.commit("authUserCreds", null);
+    },
+    setBandwidthProfiles(_, payload) {
+      this.commit("bandwidthProfiles", payload);
     },
   },
   modules: {},

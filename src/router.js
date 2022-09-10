@@ -5,6 +5,8 @@ import Homepage from "./pages/Homepage.vue";
 import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import Profiles from "./pages/Profiles.vue";
+import Invoices from "./pages/Invoices.vue";
+import Nas from "./pages/Nas.vue";
 
 const routerHistory = createWebHistory();
 
@@ -34,6 +36,15 @@ const router = createRouter({
         {
           path: "profiles",
           component: Profiles,
+        },
+
+        {
+          path: "ecommerce/invoices",
+          component: Invoices,
+        },
+        {
+          path: "nas",
+          component: Nas,
         },
       ],
     },

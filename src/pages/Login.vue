@@ -65,6 +65,7 @@
 <script>
 import draw12 from "../images/draw12.svg";
 import api from "../api";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -94,6 +95,11 @@ export default {
         .catch((err) => {
           console.log(err.response.status);
         });
+      // console.log(
+      //   axios.get("https://192.168.88.1/rest/ppp/profile", {
+      //     auth: { username: "admin", password: "password" },
+      //   })
+      // );
     },
   },
 };
