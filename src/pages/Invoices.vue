@@ -215,20 +215,21 @@
 
                 <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                   <div
-                    class="inline-flex font-medium bg-red-100 text-red-500 rounded-full text-center px-2.5 py-0.5"
+                    class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5"
+                    :class="statusClass(invoice.invoice_status)"
                   >
-                    {{ invoice.invoice_status }}
+                    {{ capitalizeString(invoice.invoice_status) }}
                   </div>
                 </td>
                 <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div>{{ invoice.issued_by }}</div>
+                  <div>{{ invoice.generated_by }}</div>
                 </td>
                 <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div>{{ invoice.issued_by }}</div>
+                  <div>{{ generateDateFormat(invoice.created_at) }}</div>
                 </td>
                 <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                   <div class="flex items-center">
-                    <div>{{ Date(invoice.due_date).getDay() }}</div>
+                    <div>{{ generateDateFormat(invoice.due_date) }}</div>
                   </div>
                 </td>
                 <td
@@ -492,11 +493,31 @@ export default {
   data() {
     return {
       invoices: [],
+      pendingInvoices: [],
     };
   },
-  computed: {
-    pendingInvoices() {},
-    invoices() {
+  methods: {
+    capitalizeString(string) {
+      string = String(string);
+      const lower = string.toLowerCase();
+      return string.charAt(0).toUpperCase() + lower.slice(1);
+    },
+    generateDateFormat(date) {
+      let d = new Date(date);
+      return d.toDateString();
+    },
+    statusClass(status) {
+      console.log(status);
+      if (status == "paid") {
+        return "bg-green-100 text-green-600";
+      } else if (status == "pending") {
+        return "bg-yellow-100 text-yellow-600";
+      } else {
+        console.log("called");
+        return "bg-red-100 text-red-600";
+      }
+    },
+    loadInvoices() {
       api
         .get("accounting/invoices/")
         .then((response) => response)
@@ -506,46 +527,41 @@ export default {
     },
   },
   beforeMount() {
-    api
-      .get("accounting/invoices/")
-      .then((response) => response)
-      .then((res) => {
-        this.invoices = res.data;
-      });
+    this.loadInvoices();
   },
 };
 
 // A basic demo function to handle "select all" functionality
-document.addEventListener("alpine:init", () => {
-  Alpine.data("handleSelect", () => ({
-    selectall: false,
-    selectAction() {
-      countEl = document.querySelector(".table-items-action");
-      if (!countEl) return;
-      checkboxes = document.querySelectorAll("input.table-item:checked");
-      document.querySelector(".table-items-count").innerHTML =
-        checkboxes.length;
-      if (checkboxes.length > 0) {
-        countEl.classList.remove("hidden");
-      } else {
-        countEl.classList.add("hidden");
-      }
-    },
-    toggleAll() {
-      this.selectall = !this.selectall;
-      checkboxes = document.querySelectorAll("input.table-item");
-      [...checkboxes].map((el) => {
-        el.checked = this.selectall;
-      });
-      this.selectAction();
-    },
-    uncheckParent() {
-      this.selectall = false;
-      document.getElementById("parent-checkbox").checked = false;
-      this.selectAction();
-    },
-  }));
-});
+// document.addEventListener("alpine:init", () => {
+//   Alpine.data("handleSelect", () => ({
+//     selectall: false,
+//     selectAction() {
+//       countEl = document.querySelector(".table-items-action");
+//       if (!countEl) return;
+//       checkboxes = document.querySelectorAll("input.table-item:checked");
+//       document.querySelector(".table-items-count").innerHTML =
+//         checkboxes.length;
+//       if (checkboxes.length > 0) {
+//         countEl.classList.remove("hidden");
+//       } else {
+//         countEl.classList.add("hidden");
+//       }
+//     },
+//     toggleAll() {
+//       this.selectall = !this.selectall;
+//       checkboxes = document.querySelectorAll("input.table-item");
+//       [...checkboxes].map((el) => {
+//         el.checked = this.selectall;
+//       });
+//       this.selectAction();
+//     },
+//     uncheckParent() {
+//       this.selectall = false;
+//       document.getElementById("parent-checkbox").checked = false;
+//       this.selectAction();
+//     },
+//   }));
+// });
 </script>
 
 <style></style>
