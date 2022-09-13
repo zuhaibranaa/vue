@@ -26,27 +26,16 @@ const router = createRouter({
       component: Register,
     },
     {
+      path: "/dashboard/profiles",
+      component: Profiles,
+    },
+    {
+      path: "/dashboard/ecommerce/invoices",
+      component: Invoices,
+    },
+    {
       path: "/dashboard",
-      component: Dashboard,
-      children: [
-        {
-          path: "",
-          component: DashboardHome,
-        },
-        {
-          path: "profiles",
-          component: Profiles,
-        },
-
-        {
-          path: "ecommerce/invoices",
-          component: Invoices,
-        },
-        {
-          path: "nas",
-          component: Nas,
-        },
-      ],
+      component: DashboardHome,
     },
   ],
 });

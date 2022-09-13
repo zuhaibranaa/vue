@@ -1,6 +1,7 @@
 export default {
+  supplier: null,
   invoices: null,
-  payments: null,
-  inventory: null,
   journal: null,
+  inventory: null,
+  payments: null,
 };

@@ -15,7 +15,7 @@
 
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-          <router-view />
+          <slot></slot>
         </div>
       </main>
 
@@ -36,7 +36,10 @@ export default {
     Header,
   },
   beforeCreate() {
-    this.$store.getters.getAuthToken ? "" : this.$router.push("/login");
+    if (!this.$store.getters.getAuthToken) {
+      this.$router.push("/login");
+    }
+    this.$store.dispatch("accounting/fetchDataFromServer");
   },
   setup() {
     const sidebarOpen = ref(false);
