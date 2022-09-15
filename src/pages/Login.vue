@@ -75,7 +75,7 @@ export default {
     };
   },
   beforeCreate() {
-    this.$store.getAuthToken ? this.$router.push("dashboard") : "";
+    this.$store["auth/getAuthToken"] ? this.$router.push("dashboard") : "";
   },
   methods: {
     loginUser() {
@@ -89,11 +89,11 @@ export default {
           return response;
         })
         .then((res) => {
-          this.$store.dispatch("doLogin", res.data);
+          this.$store.dispatch("auth/doLogin", res.data);
           this.$router.push("dashboard");
         })
         .catch((err) => {
-          console.log(err.response.status);
+          alert("Error " + err.response.status);
         });
       // console.log(
       //   axios.get("https://192.168.88.1/rest/ppp/profile", {

@@ -103,7 +103,7 @@
               >
                 All
                 <span class="ml-1" :class="getClass(allActive)[1]">{{
-                  invoices.length
+                  invoices.all.length
                 }}</span>
               </button>
             </li>
@@ -115,7 +115,7 @@
               >
                 Paid
                 <span class="ml-1" :class="getClass(paidActive)[1]">{{
-                  paid.length
+                  invoices.paid.length
                 }}</span>
               </button>
             </li>
@@ -127,7 +127,7 @@
               >
                 Pending
                 <span class="ml-1" :class="getClass(dueActive)[1]">{{
-                  due.length
+                  invoices.due.length
                 }}</span>
               </button>
             </li>
@@ -232,7 +232,7 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="invoice in temp" :key="invoice.id">
+                <tr v-for="invoice in invoices" :key="invoice.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -372,9 +372,6 @@ export default {
   data() {
     return {
       invoices: [],
-      paid: [],
-      due: [],
-      overdue: [],
       temp: [],
       allActive: true,
       paidActive: false,
@@ -391,8 +388,6 @@ export default {
     },
     temp() {},
     createInvoiceToggle() {},
-    paid() {},
-    due() {},
     overdue() {},
   },
   methods: {
@@ -401,7 +396,7 @@ export default {
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.invoices;
+      this.temp = this.invoices.all;
     },
     showOverdueInvoices() {
       this.allActive = false;
@@ -477,7 +472,6 @@ export default {
   },
   mounted() {
     this.invoices = this.$store.getters["accounting/getInvoices"];
-    this.temp = this.invoices;
   },
 
   components: { Dashboard, PopupModal, CreateNewButton },

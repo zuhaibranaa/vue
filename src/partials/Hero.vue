@@ -100,7 +100,7 @@
             </ul>
           </div>
           <div
-            v-if="this.$store.getters.getAuthToken"
+            v-if="this.$store.getters['auth/getAuthToken']"
             class="flex items-center lg:ml-auto"
           >
             <router-link

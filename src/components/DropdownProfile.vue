@@ -8,10 +8,8 @@
       :aria-expanded="dropdownOpen"
     >
       <img
-        class="w-8 h-8 rounded-full"
-        :src="UserAvatar"
-        width="32"
-        height="32"
+        class="w-8 h-9 rounded-full"
+        :src="`http://127.0.0.1:8000${user.image}`"
         alt="User"
       />
       <div class="flex items-center truncate">
@@ -73,7 +71,6 @@
 
 <script>
 import { ref, onMounted, onUnmounted, onUpdated } from "vue";
-import UserAvatar from "../images/user-avatar-32.png";
 
 export default {
   name: "DropdownProfile",
@@ -81,14 +78,13 @@ export default {
   methods: {
     doLogout() {
       this.dropdownOpen = false;
-      this.$store.dispatch("doLogout");
+      this.$store.dispatch("auth/doLogout");
       this.$router.push("/login");
     },
   },
   data() {
     return {
-      UserAvatar,
-      user: this.$store.getters["getAuthUser"],
+      user: this.$store.getters["auth/getAuthUser"],
     };
   },
   setup() {

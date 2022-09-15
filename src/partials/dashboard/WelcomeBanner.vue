@@ -68,7 +68,8 @@
     <!-- Content -->
     <div class="relative">
       <h1 class="text-2xl md:text-3xl text-gray-800 font-bold mb-1">
-        Good {{ timeNow }}, {{ this.$store.getters.getAuthUser.name }}. 👋
+        Good {{ timeNow }}, {{ this.$store.getters["auth/getAuthUser"].name }}.
+        👋
       </h1>
       <p>Here is what’s happening with your system today:</p>
     </div>

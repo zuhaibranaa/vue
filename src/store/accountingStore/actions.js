@@ -66,7 +66,6 @@ export default {
       });
   },
   uploadNewSupplier(context, payload) {
-    console.log(payload);
     api.post("accounting/suppliers/", payload).then((response) => {
       console.log(response);
     });

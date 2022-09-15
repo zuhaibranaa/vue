@@ -1,8 +1,10 @@
 export default {
   authToken(state, payload) {
-    state.auth.authToken = payload;
+    console.log("authToken Mutation Called");
+
+    state.authToken = payload;
   },
   authUserCreds(state, payload) {
-    state.auth.authUserCreds = payload;
+    state.authUserCreds = payload;
   },
 };

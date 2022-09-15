@@ -1,6 +1,15 @@
 export default {
   setInvoices(state, payload) {
-    state.invoices = payload;
+    state.invoices.all = payload;
+    state.invoices.paid = payload.filter((invoice) => {
+      return invoice.invoice_status == "paid";
+    });
+    state.invoices.pending = payload.filter((invoice) => {
+      return invoice.invoice_status == "pending";
+    });
+    state.invoices.pending = payload.filter((invoice) => {
+      return invoice.invoice_status == "overdue";
+    });
   },
   setPayments(state, payload) {
     state.payments = payload;

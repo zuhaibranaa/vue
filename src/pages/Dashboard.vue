@@ -36,7 +36,7 @@ export default {
     Header,
   },
   beforeCreate() {
-    if (!this.$store.getters.getAuthToken) {
+    if (!this.$store.getters["auth/getAuthToken"]) {
       this.$router.push("/login");
     }
     this.$store.dispatch("accounting/fetchDataFromServer");
