@@ -6,7 +6,7 @@
         <!-- Left: Title -->
         <div class="mb-4 sm:mb-0">
           <h1 class="text-2xl md:text-3xl text-gray-800 font-bold">
-            Invoices ✨
+            Inventory ✨
           </h1>
         </div>
 
@@ -21,7 +21,7 @@
               id="action-search"
               class="form-input pl-9 focus:border-gray-300"
               type="search"
-              placeholder="Search by invoice ID…"
+              placeholder="Search by Inventory ID…"
             />
             <button
               class="absolute inset-0 right-auto group"
@@ -44,107 +44,13 @@
           </form>
 
           <!-- Add member button -->
-          <PopupModal
-            message="Create New Invoice"
-            :showModal="createActive"
-            @saveData="storeNewInvoice"
-            @toggle="toggleModal"
-          >
-            <template #button>
-              <CreateNewButton
-                :message="'Generate New Invoice'"
-                @clickToggle="toggleModal"
-              />
-            </template>
-            <div>
-              <label for="price" class="block text-sm font-medium text-gray-700"
-                >Customer</label
-              >
-              <div class="relative mt-1 rounded-md shadow-sm">
-                <select
-                  id="currency"
-                  name="currency"
-                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                  <option>USD</option>
-                  <option>CAD</option>
-                  <option>EUR</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label for="price" class="block text-sm font-medium text-gray-700"
-                >Discount</label
-              >
-              <div class="relative mt-1 rounded-md shadow-sm">
-                <input
-                  type="number"
-                  name="discount"
-                  id="price"
-                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="0"
-                />
-              </div>
-            </div>
-          </PopupModal>
+          <PopupModal message="New Inventory Item"> </PopupModal>
         </div>
       </div>
 
       <!-- More actions -->
       <div class="sm:flex sm:justify-between sm:items-center mb-5">
         <!-- Left side -->
-        <div class="mb-4 sm:mb-0">
-          <ul class="flex flex-wrap -m-1">
-            <li class="m-1">
-              <button
-                @click="showAllInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(allActive)[0]"
-              >
-                All
-                <span class="ml-1" :class="getClass(allActive)[1]">{{
-                  invoices.length
-                }}</span>
-              </button>
-            </li>
-            <li class="m-1">
-              <button
-                @click="showPaidInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(paidActive)[0]"
-              >
-                Paid
-                <span class="ml-1" :class="getClass(paidActive)[1]">{{
-                  paid.length
-                }}</span>
-              </button>
-            </li>
-            <li class="m-1">
-              <button
-                @click="showPendingInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(dueActive)[0]"
-              >
-                Pending
-                <span class="ml-1" :class="getClass(dueActive)[1]">{{
-                  due.length
-                }}</span>
-              </button>
-            </li>
-            <li class="m-1">
-              <button
-                @click="showOverdueInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(overdueActive)[0]"
-              >
-                Overdue
-                <span class="ml-1" :class="getClass(overdueActive)[1]">{{
-                  overdue.length
-                }}</span>
-              </button>
-            </li>
-          </ul>
-        </div>
 
         <!-- Right side -->
         <div
@@ -172,7 +78,7 @@
       <div class="bg-white shadow-lg rounded-sm border border-gray-200 mb-8">
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
-            Invoices
+            Inventory
             <span class="text-gray-400 font-medium">{{ invoices.length }}</span>
           </h2>
         </header>
@@ -367,7 +273,6 @@
 <script>
 import Dashboard from "./Dashboard.vue";
 import PopupModal from "../components/PopupModal.vue";
-import CreateNewButton from "../components/CreateNewButton.vue";
 export default {
   data() {
     return {
@@ -379,54 +284,11 @@ export default {
       allActive: true,
       paidActive: false,
       dueActive: false,
-      createActive: false,
       overdueActive: false,
     };
   },
 
-  watch: {
-    invoices() {
-      this.$store.getters["accounting/getInvoices"];
-      this.getPaidInvoices();
-    },
-    temp() {},
-    createInvoiceToggle() {},
-    paid() {},
-    due() {},
-    overdue() {},
-  },
   methods: {
-    showAllInvoices() {
-      this.allActive = true;
-      this.paidActive = false;
-      this.dueActive = false;
-      this.overdueActive = false;
-      this.temp = this.invoices;
-    },
-    showOverdueInvoices() {
-      this.allActive = false;
-      this.paidActive = false;
-      this.dueActive = false;
-      this.overdueActive = true;
-      this.temp = this.overdue;
-    },
-    showPaidInvoices() {
-      this.allActive = false;
-      this.paidActive = true;
-      this.dueActive = false;
-      this.overdueActive = false;
-      this.temp = this.paid;
-    },
-    showPendingInvoices() {
-      this.allActive = false;
-      this.paidActive = false;
-      this.dueActive = true;
-      this.overdueActive = false;
-      this.temp = this.due;
-    },
-    toggleModal() {
-      this.createActive = !this.createActive;
-    },
     getClass(val) {
       return [
         val
@@ -434,21 +296,6 @@ export default {
           : "border-gray-200 hover:border-gray-300 shadow-sm bg-white text-gray-500",
         val ? "text-indigo-200" : "text-gray-400",
       ];
-    },
-    getPaidInvoices() {
-      this.paid = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "paid";
-      });
-    },
-    getDueInvoices() {
-      this.due = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "pending";
-      });
-    },
-    getOverdueInvoices() {
-      this.overdue = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "overdue";
-      });
     },
     capitalizeString(string) {
       string = String(string);
@@ -459,28 +306,14 @@ export default {
       let d = new Date(date);
       return d.toDateString();
     },
-    statusClass(status) {
-      if (status == "paid") {
-        return "bg-green-100 text-green-600";
-      } else if (status == "pending") {
-        return "bg-yellow-100 text-yellow-600";
-      } else {
-        return "bg-red-100 text-red-600";
-      }
-    },
   },
   beforeCreate() {
     if (this.$store.getters.getAuthToken === null) {
       this.$router.push("/login");
     }
-    this.$store.dispatch("accounting/fetchInvoices");
-  },
-  mounted() {
-    this.invoices = this.$store.getters["accounting/getInvoices"];
-    this.temp = this.invoices;
   },
 
-  components: { Dashboard, PopupModal, CreateNewButton },
+  components: { Dashboard, PopupModal },
 };
 </script>
 

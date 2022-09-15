@@ -13,7 +13,7 @@ export default {
         context.commit("setInvoices", data.data);
       });
   },
-  fetchInventory() {
+  fetchInventory(context) {
     // Fetch Inventory
     api
       .get("accounting/inventory/")
@@ -26,7 +26,7 @@ export default {
         context.commit("setInventory", data.data);
       });
   },
-  fetchPayments() {
+  fetchPayments(context) {
     // Fetch Payments
     api
       .get("accounting/payments/")
@@ -39,7 +39,7 @@ export default {
         context.commit("setPayments", data.data);
       });
   },
-  fetchJournal() {
+  fetchJournal(context) {
     // Fetch Journal
     api
       .get("accounting/journal/")
@@ -52,7 +52,7 @@ export default {
         context.commit("setJournalEntries", data.data);
       });
   },
-  fetchSuppliers() {
+  fetchSuppliers(context) {
     // Fetch Suppliers
     api
       .get("accounting/suppliers/")
@@ -64,5 +64,11 @@ export default {
       .then((data) => {
         context.commit("setSuppliers", data.data);
       });
+  },
+  uploadNewSupplier(context, payload) {
+    console.log(payload);
+    api.post("accounting/suppliers/", payload).then((response) => {
+      console.log(response);
+    });
   },
 };

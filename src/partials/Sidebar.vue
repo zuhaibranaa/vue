@@ -254,6 +254,9 @@
                         :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
+                        @mouseover="
+                          this.$store.dispatch('accounting/fetchInvoices')
+                        "
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
@@ -273,6 +276,9 @@
                         :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
+                        @mouseover="
+                          this.$store.dispatch('accounting/fetchPayments')
+                        "
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
@@ -282,7 +288,7 @@
                     </li>
                   </router-link>
                   <router-link
-                    to="/"
+                    to="/dashboard/ecommerce/inventory"
                     custom
                     v-slot="{ href, navigate, isExactActive }"
                   >
@@ -292,6 +298,9 @@
                         :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
+                        @mouseover="
+                          this.$store.dispatch('accounting/fetchInventory')
+                        "
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
@@ -301,7 +310,7 @@
                     </li>
                   </router-link>
                   <router-link
-                    to="/"
+                    to="/dashboard/ecommerce/journal"
                     custom
                     v-slot="{ href, navigate, isExactActive }"
                   >
@@ -311,6 +320,9 @@
                         :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
+                        @mouseover="
+                          this.$store.dispatch('accounting/fetchJournal')
+                        "
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
@@ -320,7 +332,7 @@
                     </li>
                   </router-link>
                   <router-link
-                    to="/"
+                    to="/dashboard/ecommerce/suppliers"
                     custom
                     v-slot="{ href, navigate, isExactActive }"
                   >
@@ -330,10 +342,13 @@
                         :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
+                        @mouseover="
+                          this.$store.dispatch('accounting/fetchSuppliers')
+                        "
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                          >Ledger</span
+                          >Suppliers</span
                         >
                       </a>
                     </li>

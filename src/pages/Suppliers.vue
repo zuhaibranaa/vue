@@ -6,7 +6,7 @@
         <!-- Left: Title -->
         <div class="mb-4 sm:mb-0">
           <h1 class="text-2xl md:text-3xl text-gray-800 font-bold">
-            Invoices ✨
+            Suppliers ✨
           </h1>
         </div>
 
@@ -21,7 +21,7 @@
               id="action-search"
               class="form-input pl-9 focus:border-gray-300"
               type="search"
-              placeholder="Search by invoice ID…"
+              placeholder="Search by Supplier ID…"
             />
             <button
               class="absolute inset-0 right-auto group"
@@ -45,44 +45,83 @@
 
           <!-- Add member button -->
           <PopupModal
-            message="Create New Invoice"
+            message="New Supplier"
             :showModal="createActive"
-            @saveData="storeNewInvoice"
+            @saveData="storeNewSupplier"
             @toggle="toggleModal"
           >
             <template #button>
               <CreateNewButton
-                :message="'Generate New Invoice'"
+                :message="'Create New Supplier'"
                 @clickToggle="toggleModal"
               />
             </template>
-            <div>
-              <label for="price" class="block text-sm font-medium text-gray-700"
-                >Customer</label
-              >
-              <div class="relative mt-1 rounded-md shadow-sm">
-                <select
-                  id="currency"
-                  name="currency"
-                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                  <option>USD</option>
-                  <option>CAD</option>
-                  <option>EUR</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label for="price" class="block text-sm font-medium text-gray-700"
-                >Discount</label
+            <div class="pt-3">
+              <label for="name" class="block text-sm font-medium text-gray-700"
+                >Name</label
               >
               <div class="relative mt-1 rounded-md shadow-sm">
                 <input
-                  type="number"
-                  name="discount"
-                  id="price"
+                  v-model="name"
+                  type="text"
+                  name="name"
+                  id="name"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="0"
+                  placeholder="Enter Supplier Name"
+                />
+              </div>
+            </div>
+            <div class="pt-3">
+              <label for="email" class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <input
+                  v-model="email"
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Enter Supplier Email"
+                />
+              </div>
+            </div>
+            <div class="pt-3">
+              <label
+                for="address"
+                class="block text-sm font-medium text-gray-700"
+                >Address</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <input
+                  v-model="address"
+                  type="text"
+                  name="address"
+                  id="address"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Enter Supplier Address"
+                />
+              </div>
+            </div>
+            <div class="pt-3">
+              <label
+                for="mobile"
+                class="block text-sm font-medium text-gray-700"
+                >Mobile</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <div
+                  class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                >
+                  <span class="text-gray-500 sm:text-sm">03</span>
+                </div>
+                <input
+                  v-model="contact"
+                  type="text"
+                  name="mobile"
+                  id="mobile"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="001234567"
                 />
               </div>
             </div>
@@ -93,58 +132,6 @@
       <!-- More actions -->
       <div class="sm:flex sm:justify-between sm:items-center mb-5">
         <!-- Left side -->
-        <div class="mb-4 sm:mb-0">
-          <ul class="flex flex-wrap -m-1">
-            <li class="m-1">
-              <button
-                @click="showAllInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(allActive)[0]"
-              >
-                All
-                <span class="ml-1" :class="getClass(allActive)[1]">{{
-                  invoices.length
-                }}</span>
-              </button>
-            </li>
-            <li class="m-1">
-              <button
-                @click="showPaidInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(paidActive)[0]"
-              >
-                Paid
-                <span class="ml-1" :class="getClass(paidActive)[1]">{{
-                  paid.length
-                }}</span>
-              </button>
-            </li>
-            <li class="m-1">
-              <button
-                @click="showPendingInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(dueActive)[0]"
-              >
-                Pending
-                <span class="ml-1" :class="getClass(dueActive)[1]">{{
-                  due.length
-                }}</span>
-              </button>
-            </li>
-            <li class="m-1">
-              <button
-                @click="showOverdueInvoices"
-                class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border duration-150 ease-in-out"
-                :class="getClass(overdueActive)[0]"
-              >
-                Overdue
-                <span class="ml-1" :class="getClass(overdueActive)[1]">{{
-                  overdue.length
-                }}</span>
-              </button>
-            </li>
-          </ul>
-        </div>
 
         <!-- Right side -->
         <div
@@ -172,8 +159,10 @@
       <div class="bg-white shadow-lg rounded-sm border border-gray-200 mb-8">
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
-            Invoices
-            <span class="text-gray-400 font-medium">{{ invoices.length }}</span>
+            Suppliers
+            <span class="text-gray-400 font-medium">{{
+              suppliers.length
+            }}</span>
           </h2>
         </header>
         <div x-data="handleSelect">
@@ -201,28 +190,19 @@
                     </div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Invoice</div>
+                    <div class="font-semibold text-left">ID</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Customer</div>
+                    <div class="font-semibold text-left">Name</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Discount</div>
+                    <div class="font-semibold text-left">E-Mail</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Total</div>
+                    <div class="font-semibold text-left">Address</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Status</div>
-                  </th>
-                  <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Issued by</div>
-                  </th>
-                  <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Issue date</div>
-                  </th>
-                  <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Due date</div>
+                    <div class="font-semibold text-left">Contact Number</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-semibold text-left">Actions</div>
@@ -232,7 +212,7 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="invoice in temp" :key="invoice.id">
+                <tr v-for="supplier in suppliers" :key="supplier.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -249,43 +229,28 @@
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-orange-300">
-                      {{ "#" + invoice.id }}
+                      {{ "#" + supplier.id }}
                     </div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-green-500">
-                      {{ invoice.customer.name }}
+                      {{ supplier.name }}
                     </div>
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ invoice.discount }}</div>
+                    <div>{{ supplier.email }}</div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-gray-800">
-                      {{ invoice.total_amount }}
+                      {{ supplier.address }}
                     </div>
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div
-                      class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5"
-                      :class="statusClass(invoice.invoice_status)"
-                    >
-                      {{ capitalizeString(invoice.invoice_status) }}
-                    </div>
+                    <div>{{ supplier.mobile }}</div>
                   </td>
-                  <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ invoice.generated_by.email }}</div>
-                  </td>
-                  <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ generateDateFormat(invoice.created_at) }}</div>
-                  </td>
-                  <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="flex items-center">
-                      <div>{{ generateDateFormat(invoice.due_date) }}</div>
-                    </div>
-                  </td>
+
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -297,16 +262,6 @@
                         <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
                           <path
                             d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        class="text-gray-400 hover:text-gray-500 rounded-full"
-                      >
-                        <span class="sr-only">Download</span>
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path
-                            d="M16 20c.3 0 .5-.1.7-.3l5.7-5.7-1.4-1.4-4 4V8h-2v8.6l-4-4L9.6 14l5.7 5.7c.2.2.4.3.7.3zM9 22h14v2H9z"
                           />
                         </svg>
                       </button>
@@ -329,37 +284,8 @@
           </div>
         </div>
       </div>
+      <Pagination :total-items="suppliersLength()" />
       <!-- Pagination -->
-      <!-- <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <nav
-          class="mb-4 sm:mb-0 sm:order-1"
-          role="navigation"
-          aria-label="Navigation"
-        >
-          <ul class="flex justify-center">
-            <li class="ml-3 first:ml-0">
-              <a
-                class="btn bg-white border-gray-200 text-gray-300 cursor-not-allowed"
-                href="#0"
-                disabled
-                >&lt;- Previous</a
-              >
-            </li>
-            <li class="ml-3 first:ml-0">
-              <a
-                class="btn bg-white border-gray-200 hover:border-gray-300 text-indigo-500"
-                href="#0"
-                >Next -&gt;</a
-              >
-            </li>
-          </ul>
-        </nav>
-        <div class="text-sm text-gray-500 text-center sm:text-left">
-          Showing <span class="font-medium text-gray-600">1</span> to
-          <span class="font-medium text-gray-600">10</span> of
-          <span class="font-medium text-gray-600">467</span> results
-        </div>
-      </div> -->
     </div>
   </Dashboard>
 </template>
@@ -368,62 +294,51 @@
 import Dashboard from "./Dashboard.vue";
 import PopupModal from "../components/PopupModal.vue";
 import CreateNewButton from "../components/CreateNewButton.vue";
+import Pagination from "../partials/Pagination.vue";
 export default {
   data() {
     return {
-      invoices: [],
-      paid: [],
-      due: [],
-      overdue: [],
-      temp: [],
-      allActive: true,
-      paidActive: false,
-      dueActive: false,
       createActive: false,
-      overdueActive: false,
+      suppliers: [],
+      name: null,
+      email: null,
+      address: null,
+      contact: null,
     };
   },
-
   watch: {
-    invoices() {
-      this.$store.getters["accounting/getInvoices"];
-      this.getPaidInvoices();
+    suppliers() {
+      this.$store.dispatch("accounting/fetchSuppliers");
+      this.suppliers = this.$store.getters["accounting/getSuppliers"];
     },
-    temp() {},
-    createInvoiceToggle() {},
-    paid() {},
-    due() {},
-    overdue() {},
+
+    name() {
+      this.name = this.name;
+    },
+    email() {
+      this.email = this.email;
+    },
+    address() {
+      this.address = this.address;
+    },
+    contact() {
+      this.contact = this.contact;
+    },
   },
+
   methods: {
-    showAllInvoices() {
-      this.allActive = true;
-      this.paidActive = false;
-      this.dueActive = false;
-      this.overdueActive = false;
-      this.temp = this.invoices;
+    suppliersLength() {
+      return this.suppliers.length;
     },
-    showOverdueInvoices() {
-      this.allActive = false;
-      this.paidActive = false;
-      this.dueActive = false;
-      this.overdueActive = true;
-      this.temp = this.overdue;
+    storeNewSupplier() {
+      this.$store.dispatch("accounting/uploadNewSupplier", {
+        name: this.name,
+        email: this.email,
+        address: this.address,
+        mobile: `923${this.contact}`,
+      });
     },
-    showPaidInvoices() {
-      this.allActive = false;
-      this.paidActive = true;
-      this.dueActive = false;
-      this.overdueActive = false;
-      this.temp = this.paid;
-    },
-    showPendingInvoices() {
-      this.allActive = false;
-      this.paidActive = false;
-      this.dueActive = true;
-      this.overdueActive = false;
-      this.temp = this.due;
-    },
+
     toggleModal() {
       this.createActive = !this.createActive;
     },
@@ -435,21 +350,6 @@ export default {
         val ? "text-indigo-200" : "text-gray-400",
       ];
     },
-    getPaidInvoices() {
-      this.paid = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "paid";
-      });
-    },
-    getDueInvoices() {
-      this.due = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "pending";
-      });
-    },
-    getOverdueInvoices() {
-      this.overdue = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "overdue";
-      });
-    },
     capitalizeString(string) {
       string = String(string);
       const lower = string.toLowerCase();
@@ -459,28 +359,17 @@ export default {
       let d = new Date(date);
       return d.toDateString();
     },
-    statusClass(status) {
-      if (status == "paid") {
-        return "bg-green-100 text-green-600";
-      } else if (status == "pending") {
-        return "bg-yellow-100 text-yellow-600";
-      } else {
-        return "bg-red-100 text-red-600";
-      }
-    },
   },
   beforeCreate() {
     if (this.$store.getters.getAuthToken === null) {
       this.$router.push("/login");
     }
-    this.$store.dispatch("accounting/fetchInvoices");
   },
-  mounted() {
-    this.invoices = this.$store.getters["accounting/getInvoices"];
-    this.temp = this.invoices;
+  beforeMount() {
+    this.suppliers = this.$store.getters["accounting/getSuppliers"];
   },
 
-  components: { Dashboard, PopupModal, CreateNewButton },
+  components: { Dashboard, PopupModal, CreateNewButton, Pagination },
 };
 </script>
 

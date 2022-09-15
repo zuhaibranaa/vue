@@ -1,8 +1,8 @@
 export default {
   authToken(state, payload) {
-    state.authToken = payload;
+    state.auth.authToken = payload;
   },
   authUserCreds(state, payload) {
-    state.authUserCreds = payload;
+    state.auth.authUserCreds = payload;
   },
 };
