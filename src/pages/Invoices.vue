@@ -89,7 +89,6 @@
           </PopupModal>
         </div>
       </div>
-
       <!-- More actions -->
       <div class="sm:flex sm:justify-between sm:items-center mb-5">
         <!-- Left side -->
@@ -126,9 +125,9 @@
                 :class="getClass(dueActive)[0]"
               >
                 Pending
-                <span class="ml-1" :class="getClass(dueActive)[1]">{{
-                  invoices.due.length
-                }}</span>
+                <span class="ml-1" :class="getClass(dueActive)[1]">
+                  {{ invoices.pending.length }}
+                </span>
               </button>
             </li>
             <li class="m-1">
@@ -138,9 +137,9 @@
                 :class="getClass(overdueActive)[0]"
               >
                 Overdue
-                <span class="ml-1" :class="getClass(overdueActive)[1]">{{
-                  overdue.length
-                }}</span>
+                <span class="ml-1" :class="getClass(overdueActive)[1]">
+                  {{ invoices.overdue.length }}
+                </span>
               </button>
             </li>
           </ul>
@@ -173,7 +172,7 @@
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
             Invoices
-            <span class="text-gray-400 font-medium">{{ invoices.length }}</span>
+            <span class="text-gray-400 font-medium">{{ temp.length }}</span>
           </h2>
         </header>
         <div x-data="handleSelect">
@@ -232,7 +231,7 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="invoice in invoices" :key="invoice.id">
+                <tr v-for="invoice in temp" :key="invoice.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -329,37 +328,7 @@
           </div>
         </div>
       </div>
-      <!-- Pagination -->
-      <!-- <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <nav
-          class="mb-4 sm:mb-0 sm:order-1"
-          role="navigation"
-          aria-label="Navigation"
-        >
-          <ul class="flex justify-center">
-            <li class="ml-3 first:ml-0">
-              <a
-                class="btn bg-white border-gray-200 text-gray-300 cursor-not-allowed"
-                href="#0"
-                disabled
-                >&lt;- Previous</a
-              >
-            </li>
-            <li class="ml-3 first:ml-0">
-              <a
-                class="btn bg-white border-gray-200 hover:border-gray-300 text-indigo-500"
-                href="#0"
-                >Next -&gt;</a
-              >
-            </li>
-          </ul>
-        </nav>
-        <div class="text-sm text-gray-500 text-center sm:text-left">
-          Showing <span class="font-medium text-gray-600">1</span> to
-          <span class="font-medium text-gray-600">10</span> of
-          <span class="font-medium text-gray-600">467</span> results
-        </div>
-      </div> -->
+      <Pagination :total-items="temp.length" :start="1" :end="1" />
     </div>
   </Dashboard>
 </template>
@@ -368,24 +337,22 @@
 import Dashboard from "./Dashboard.vue";
 import PopupModal from "../components/PopupModal.vue";
 import CreateNewButton from "../components/CreateNewButton.vue";
+import Pagination from "../partials/Pagination.vue";
 export default {
   data() {
     return {
-      invoices: [],
+      invoices: this.$store.getters["accounting/getInvoices"],
       temp: [],
       allActive: true,
       paidActive: false,
       dueActive: false,
       createActive: false,
       overdueActive: false,
+      page: 0,
     };
   },
 
   watch: {
-    invoices() {
-      this.$store.getters["accounting/getInvoices"];
-      this.getPaidInvoices();
-    },
     temp() {},
     createInvoiceToggle() {},
     overdue() {},
@@ -403,21 +370,21 @@ export default {
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = true;
-      this.temp = this.overdue;
+      this.temp = this.invoices.overdue;
     },
     showPaidInvoices() {
       this.allActive = false;
       this.paidActive = true;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.paid;
+      this.temp = this.invoices.paid;
     },
     showPendingInvoices() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = true;
       this.overdueActive = false;
-      this.temp = this.due;
+      this.temp = this.invoices.pending;
     },
     toggleModal() {
       this.createActive = !this.createActive;
@@ -429,21 +396,6 @@ export default {
           : "border-gray-200 hover:border-gray-300 shadow-sm bg-white text-gray-500",
         val ? "text-indigo-200" : "text-gray-400",
       ];
-    },
-    getPaidInvoices() {
-      this.paid = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "paid";
-      });
-    },
-    getDueInvoices() {
-      this.due = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "pending";
-      });
-    },
-    getOverdueInvoices() {
-      this.overdue = this.invoices.filter((invoice) => {
-        return invoice.invoice_status == "overdue";
-      });
     },
     capitalizeString(string) {
       string = String(string);
@@ -470,11 +422,12 @@ export default {
     }
     this.$store.dispatch("accounting/fetchInvoices");
   },
-  mounted() {
+  beforeMount() {
     this.invoices = this.$store.getters["accounting/getInvoices"];
+    this.temp = this.$store.getters["accounting/getInvoices"];
   },
 
-  components: { Dashboard, PopupModal, CreateNewButton },
+  components: { Dashboard, PopupModal, CreateNewButton, Pagination },
 };
 </script>
 

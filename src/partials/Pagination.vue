@@ -24,8 +24,8 @@
       </ul>
     </nav>
     <div class="text-sm text-gray-500 text-center sm:text-left">
-      Showing <span class="font-medium text-gray-600">1</span> to
-      <span class="font-medium text-gray-600">10</span> of
+      Showing <span class="font-medium text-gray-600">{{ start }}</span> to
+      <span class="font-medium text-gray-600">{{ end }}</span> of
       <span class="font-medium text-gray-600">{{ totalItems }}</span> results
     </div>
   </div>
@@ -34,7 +34,7 @@
 <script>
 export default {
   name: "large-modal",
-  props: ["total-items", "range"],
+  props: ["total-items", "start", "end"],
 };
 </script>
 
