@@ -7,4 +7,7 @@ export default {
   authUserCreds(state, payload) {
     state.authUserCreds = payload;
   },
+  setUsers(state, payload) {
+    state.customers = payload;
+  },
 };

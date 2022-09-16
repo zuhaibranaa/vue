@@ -44,12 +44,23 @@
           </form>
 
           <!-- Add member button -->
-          <PopupModal
-            message="New Supplier"
-            :showModal="createActive"
-            @saveData="storeNewSupplier"
-            @toggle="toggleModal"
-          >
+          <PopupModal message="New Supplier" :showModal="createActive">
+            <template #footer>
+              <button
+                class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                @click="toggleModal"
+              >
+                Close
+              </button>
+              <button
+                class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                @click="storeNewSupplier"
+              >
+                Save
+              </button>
+            </template>
             <template #button>
               <CreateNewButton
                 :message="'Create New Supplier'"
@@ -161,7 +172,7 @@
           <h2 class="font-semibold text-gray-800">
             Suppliers
             <span class="text-gray-400 font-medium">{{
-              suppliers.length
+              suppliersLength()
             }}</span>
           </h2>
         </header>
@@ -176,19 +187,7 @@
                 <tr>
                   <th
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
-                  >
-                    <div class="flex items-center">
-                      <label class="inline-flex">
-                        <span class="sr-only">Select all</span>
-                        <input
-                          id="parent-checkbox"
-                          class="form-checkbox"
-                          type="checkbox"
-                          @click="toggleAll"
-                        />
-                      </label>
-                    </div>
-                  </th>
+                  ></th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-semibold text-left">ID</div>
                   </th>
@@ -212,20 +211,11 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="supplier in suppliers" :key="supplier.id">
+                <tr v-for="supplier in getSuppliers" :key="supplier.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
-                    <div class="flex items-center">
-                      <label class="inline-flex">
-                        <span class="sr-only">Select</span>
-                        <input
-                          class="table-item form-checkbox"
-                          type="checkbox"
-                          @click="uncheckParent"
-                        />
-                      </label>
-                    </div>
+                    <div class="flex items-center"></div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-orange-300">
@@ -248,34 +238,162 @@
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ supplier.mobile }}</div>
+                    <div>+92 {{ supplier.mobile }}</div>
                   </td>
 
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
                     <div class="space-x-1">
-                      <button
-                        class="text-gray-400 hover:text-gray-500 rounded-full"
+                      <PopupModal
+                        message="Update Supplier"
+                        :showModal="updateOpen"
                       >
-                        <span class="sr-only">Edit</span>
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path
-                            d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        class="text-red-500 hover:text-red-600 rounded-full"
+                        <template #footer>
+                          <button
+                            class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            @click="toggleUpdate(null)"
+                          >
+                            Close
+                          </button>
+                          <button
+                            class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            @click="doUpdate(update)"
+                          >
+                            Save
+                          </button>
+                        </template>
+                        <template #button>
+                          <button
+                            @click="toggleUpdate(supplier.id)"
+                            class="text-gray-400 hover:text-gray-500 rounded-full"
+                          >
+                            <span class="sr-only">Edit</span>
+                            <svg
+                              class="w-8 h-8 fill-current"
+                              viewBox="0 0 32 32"
+                            >
+                              <path
+                                d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z"
+                              />
+                            </svg>
+                          </button>
+                        </template>
+                        <div class="pt-3">
+                          <label
+                            for="name"
+                            class="block text-sm font-medium text-gray-700"
+                            >Name</label
+                          >
+                          <div class="relative mt-1 rounded-md shadow-sm">
+                            <input
+                              v-model="update.name"
+                              type="text"
+                              name="name"
+                              id="name"
+                              class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="Enter Supplier Name"
+                            />
+                          </div>
+                        </div>
+                        <div class="pt-3">
+                          <label
+                            for="email"
+                            class="block text-sm font-medium text-gray-700"
+                            >Email</label
+                          >
+                          <div class="relative mt-1 rounded-md shadow-sm">
+                            <input
+                              v-model="update.email"
+                              type="email"
+                              name="email"
+                              id="email"
+                              class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="Enter Supplier Email"
+                            />
+                          </div>
+                        </div>
+                        <div class="pt-3">
+                          <label
+                            for="address"
+                            class="block text-sm font-medium text-gray-700"
+                            >Address</label
+                          >
+                          <div class="relative mt-1 rounded-md shadow-sm">
+                            <input
+                              v-model="update.address"
+                              type="text"
+                              name="address"
+                              id="address"
+                              class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="Enter Supplier Address"
+                            />
+                          </div>
+                        </div>
+                        <div class="pt-3">
+                          <label
+                            for="mobile"
+                            class="block text-sm font-medium text-gray-700"
+                            >Mobile</label
+                          >
+                          <div class="relative mt-1 rounded-md shadow-sm">
+                            <div
+                              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                            >
+                              <span class="text-gray-500 sm:text-sm">+92</span>
+                            </div>
+                            <input
+                              v-model="update.mobile"
+                              type="text"
+                              name="mobile"
+                              id="mobile"
+                              class="block w-full rounded-md border-gray-300 pl-10 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="001234567"
+                            />
+                          </div>
+                        </div>
+                      </PopupModal>
+
+                      <PopupModal
+                        :message="'Are You Sure You Want To Delete'"
+                        :show-modal="delOpen"
                       >
-                        <span class="sr-only">Delete</span>
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
-                          <path
-                            d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z"
-                          />
-                        </svg>
-                      </button>
+                        <template #button>
+                          <button
+                            @click="toggleDel()"
+                            class="text-red-500 hover:text-red-600 rounded-full"
+                          >
+                            <span class="sr-only">Delete</span>
+                            <svg
+                              class="w-8 h-8 fill-current"
+                              viewBox="0 0 32 32"
+                            >
+                              <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
+                              <path
+                                d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z"
+                              />
+                            </svg>
+                          </button>
+                        </template>
+                        <template #footer>
+                          <button
+                            class="text-green-500 bg-transparent border border-solid border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            @click="toggleDel"
+                          >
+                            Decline
+                          </button>
+                          <button
+                            class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            @click="del(supplier.id)"
+                          >
+                            Accept
+                          </button>
+                        </template>
+                      </PopupModal>
                     </div>
                   </td>
                 </tr>
@@ -284,7 +402,7 @@
           </div>
         </div>
       </div>
-      <Pagination :total-items="suppliersLength()" />
+      <Pagination v-if="willPaginate()" :total-items="suppliersLength()" />
       <!-- Pagination -->
     </div>
   </Dashboard>
@@ -295,41 +413,73 @@ import Dashboard from "./Dashboard.vue";
 import PopupModal from "../components/PopupModal.vue";
 import CreateNewButton from "../components/CreateNewButton.vue";
 import Pagination from "../partials/Pagination.vue";
+import { mapGetters, mapActions } from "vuex";
+import accountingStore from "../store/accountingStore";
 export default {
   data() {
     return {
       createActive: false,
-      suppliers: [],
       name: null,
       email: null,
       address: null,
       contact: null,
+      delOpen: false,
+      updateOpen: false,
+      update: {
+        id: null,
+        name: null,
+        email: null,
+        address: null,
+        mobile: null,
+      },
     };
   },
-  watch: {
-    suppliers() {
-      this.$store.dispatch("accounting/fetchSuppliers");
-      this.suppliers = this.$store.getters["accounting/getSuppliers"];
-    },
-
-    name() {
-      this.name = this.name;
-    },
-    email() {
-      this.email = this.email;
-    },
-    address() {
-      this.address = this.address;
-    },
-    contact() {
-      this.contact = this.contact;
-    },
-  },
-
+  computed: mapGetters({ getSuppliers: "accounting/getSuppliers" }),
   methods: {
-    suppliersLength() {
-      return this.suppliers.length;
+    ...mapActions({
+      fetchSuppliers: "accounting/fetchSuppliers",
+      deleteSupplier: "accounting/deleteSupplier",
+      uploadSupplier: "accounting/uploadNewSupplier",
+      updateSupplier: "accounting/updateSupplier",
+      deleteSupplier: "accounting/deleteSupplier",
+    }),
+    willPaginate() {
+      return this.suppliersLength() > 10;
     },
+    suppliersLength() {
+      let suppliers = this.getSuppliers;
+      console.log(suppliers);
+
+      // return suppliers.length;
+      return 1;
+    },
+    doUpdate(payload) {
+      this.updateSupplier(payload);
+      this.toggleUpdate();
+    },
+    toggleDel() {
+      this.delOpen = !this.delOpen;
+      return this.delOpen;
+    },
+    toggleUpdate(id) {
+      if (id) {
+        let selected = this.getSuppliers.filter((supplier) => {
+          return supplier.id == id;
+        });
+        this.update.id = selected[0].id;
+        this.update.name = selected[0].name;
+        this.update.email = selected[0].email;
+        this.update.mobile = selected[0].mobile;
+        this.update.address = selected[0].address;
+      }
+      this.updateOpen = !this.updateOpen;
+      return this.updateOpen;
+    },
+    del(payload) {
+      this.deleteSupplier(payload);
+      this.toggleDel();
+    },
+
     storeNewSupplier() {
       this.$store.dispatch("accounting/uploadNewSupplier", {
         name: this.name,
@@ -337,6 +487,7 @@ export default {
         address: this.address,
         mobile: `923${this.contact}`,
       });
+      this.createActive = false;
     },
 
     toggleModal() {
@@ -365,11 +516,16 @@ export default {
       this.$router.push("/login");
     }
   },
-  beforeMount() {
-    this.suppliers = this.$store.getters["accounting/getSuppliers"];
+  created() {
+    this.fetchSuppliers();
   },
 
-  components: { Dashboard, PopupModal, CreateNewButton, Pagination },
+  components: {
+    Dashboard,
+    PopupModal,
+    CreateNewButton,
+    Pagination,
+  },
 };
 </script>
 

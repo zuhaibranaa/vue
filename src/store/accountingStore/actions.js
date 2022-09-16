@@ -1,73 +1,48 @@
 import api from "../../api";
 export default {
-  fetchInvoices(context) {
+  async fetchInvoices(context) {
     // Fetch Invoices
-    api
-      .get("accounting/invoices/")
-      .then((res) => {
-        if (res.status == 200) {
-          return res;
-        }
-      })
-      .then((data) => {
-        context.commit("setInvoices", data.data);
-      });
+    let data = await api.get("accounting/invoices/");
+    context.commit("setInvoices", data.data);
   },
-  fetchInventory(context) {
+  async fetchInventory(context) {
     // Fetch Inventory
-    api
-      .get("accounting/inventory/")
-      .then((res) => {
-        if (res.status == 200) {
-          return res;
-        }
-      })
-      .then((data) => {
-        context.commit("setInventory", data.data);
-      });
+    let data = api.get("accounting/inventory/");
+    context.commit("setInventory", data.data);
   },
-  fetchPayments(context) {
+  async fetchPayments(context) {
     // Fetch Payments
-    api
-      .get("accounting/payments/")
-      .then((res) => {
-        if (res.status == 200) {
-          return res;
-        }
-      })
-      .then((data) => {
-        context.commit("setPayments", data.data);
-      });
+    let data = await api.get("accounting/payments/");
+    context.commit("setPayments", data.data);
   },
-  fetchJournal(context) {
+  async fetchJournal(context) {
     // Fetch Journal
-    api
-      .get("accounting/journal/")
-      .then((res) => {
-        if (res.status == 200) {
-          return res;
-        }
-      })
-      .then((data) => {
-        context.commit("setJournalEntries", data.data);
-      });
+    let data = await api.get("accounting/journal/");
+    context.commit("setJournalEntries", data.data);
   },
-  fetchSuppliers(context) {
+  async fetchSuppliers(context) {
     // Fetch Suppliers
-    api
-      .get("accounting/suppliers/")
-      .then((res) => {
-        if (res.status == 200) {
-          return res;
-        }
-      })
-      .then((data) => {
-        context.commit("setSuppliers", data.data);
-      });
+    let data = await api.get("accounting/suppliers/");
+    context.commit("setSuppliers", data.data);
   },
-  uploadNewSupplier(context, payload) {
-    api.post("accounting/suppliers/", payload).then((response) => {
-      console.log(response);
+  async uploadNewSupplier(context, payload) {
+    let data = await api.post("accounting/suppliers/", payload);
+  },
+  async updateSupplier(_, payload) {
+    await api.put("accounting/suppliers/", {
+      data: payload,
     });
+
+    this.fetchSuppliers();
+  },
+  async deleteSupplier(context, id) {
+    let response = await api.delete("accounting/suppliers/", {
+      data: { id },
+    });
+
+    context.commit(
+      "accounting/setSuppliers",
+      context.supplier.filter((supplier) => supplier.id !== id)
+    );
   },
 };

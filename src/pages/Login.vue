@@ -74,8 +74,9 @@ export default {
       password: null,
     };
   },
-  beforeCreate() {
-    this.$store["auth/getAuthToken"] ? this.$router.push("dashboard") : "";
+  beforeMount() {
+    if (this.$store.getters["auth/getAuthToken"])
+      this.$router.push("dashboard");
   },
   methods: {
     loginUser() {
