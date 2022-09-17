@@ -5,4 +5,5 @@ export default {
   getAuthUser(state) {
     return state.authUserCreds;
   },
+  getUsers: (state) => state.customers,
 };

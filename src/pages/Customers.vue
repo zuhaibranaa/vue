@@ -6,7 +6,7 @@
         <!-- Left: Title -->
         <div class="mb-4 sm:mb-0">
           <h1 class="text-2xl md:text-3xl text-gray-800 font-bold">
-            Suppliers ✨
+            Customers ✨
           </h1>
         </div>
 

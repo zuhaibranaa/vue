@@ -541,10 +541,15 @@
                       </a>
                     </li>
                   </router-link>
-                  <router-link to="/" custom v-slot="{ href, navigate }">
+                  <router-link
+                    to="/dashboard/users/customers"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
                     <li class="mb-1 last:mb-0">
                       <a
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
                         :href="href"
                         @click="navigate"
                       >

@@ -44,12 +44,23 @@
           </form>
 
           <!-- Add member button -->
-          <PopupModal
-            message="Create New Invoice"
-            :showModal="createActive"
-            @saveData="storeNewInvoice"
-            @toggle="toggleModal"
-          >
+          <PopupModal message="Create New Invoice" :showModal="createActive">
+            <template #footer>
+              <button
+                class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                @click="toggleModal"
+              >
+                Close
+              </button>
+              <button
+                class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                @click="storeNewInvoice(update)"
+              >
+                Save
+              </button>
+            </template>
             <template #button>
               <CreateNewButton
                 :message="'Generate New Invoice'"
@@ -66,21 +77,88 @@
                   name="currency"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option>USD</option>
-                  <option>CAD</option>
-                  <option>EUR</option>
+                  <option v-for="customer in getCustomers" :key="customer.id">
+                    {{ customer.email }}
+                  </option>
                 </select>
               </div>
             </div>
             <div>
-              <label for="price" class="block text-sm font-medium text-gray-700"
+              <label
+                for="discount"
+                class="block text-sm font-medium text-gray-700"
                 >Discount</label
               >
               <div class="relative mt-1 rounded-md shadow-sm">
                 <input
                   type="number"
                   name="discount"
-                  id="price"
+                  id="discount"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <div>
+              <label for="total" class="block text-sm font-medium text-gray-700"
+                >Total</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <input
+                  type="number"
+                  name="discount"
+                  id="total"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                for="status"
+                class="block text-sm font-medium text-gray-700"
+                >Status</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <select
+                  id="status"
+                  name="currency"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option>Paid</option>
+                  <option>Pending</option>
+                  <option>Overdue</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="status"
+                class="block text-sm font-medium text-gray-700"
+                >Issue Date</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <input
+                  type="date"
+                  name="discount"
+                  id="total"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                for="status"
+                class="block text-sm font-medium text-gray-700"
+                >Due Date</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <input
+                  type="date"
+                  name="discount"
+                  id="total"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="0"
                 />
@@ -102,7 +180,7 @@
               >
                 All
                 <span class="ml-1" :class="getClass(allActive)[1]">{{
-                  invoices.all.length
+                  getInvoices.all.length
                 }}</span>
               </button>
             </li>
@@ -114,7 +192,7 @@
               >
                 Paid
                 <span class="ml-1" :class="getClass(paidActive)[1]">{{
-                  invoices.paid.length
+                  getInvoices.paid.length
                 }}</span>
               </button>
             </li>
@@ -126,7 +204,7 @@
               >
                 Pending
                 <span class="ml-1" :class="getClass(dueActive)[1]">
-                  {{ invoices.pending.length }}
+                  {{ getInvoices.pending.length }}
                 </span>
               </button>
             </li>
@@ -138,7 +216,7 @@
               >
                 Overdue
                 <span class="ml-1" :class="getClass(overdueActive)[1]">
-                  {{ invoices.overdue.length }}
+                  {{ getInvoices.overdue.length }}
                 </span>
               </button>
             </li>
@@ -172,7 +250,9 @@
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
             Invoices
-            <span class="text-gray-400 font-medium">{{ temp.length }}</span>
+            <span class="text-gray-400 font-medium">
+              {{ getInvoices.all.length }}
+            </span>
           </h2>
         </header>
         <div x-data="handleSelect">
@@ -187,17 +267,7 @@
                   <th
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
-                    <div class="flex items-center">
-                      <label class="inline-flex">
-                        <span class="sr-only">Select all</span>
-                        <input
-                          id="parent-checkbox"
-                          class="form-checkbox"
-                          type="checkbox"
-                          @click="toggleAll"
-                        />
-                      </label>
-                    </div>
+                    <div class="flex items-center"></div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-semibold text-left">Invoice</div>
@@ -235,16 +305,7 @@
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
-                    <div class="flex items-center">
-                      <label class="inline-flex">
-                        <span class="sr-only">Select</span>
-                        <input
-                          class="table-item form-checkbox"
-                          type="checkbox"
-                          @click="uncheckParent"
-                        />
-                      </label>
-                    </div>
+                    <div class="flex items-center"></div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-orange-300">
@@ -292,6 +353,30 @@
                       <button
                         class="text-gray-400 hover:text-gray-500 rounded-full"
                       >
+                        <span class="sr-only">View</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 32 32"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          class="w-8 h-8 pt-1"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        class="text-gray-400 hover:text-gray-500 rounded-full"
+                      >
                         <span class="sr-only">Edit</span>
                         <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
                           <path
@@ -300,17 +385,7 @@
                         </svg>
                       </button>
                       <button
-                        class="text-gray-400 hover:text-gray-500 rounded-full"
-                      >
-                        <span class="sr-only">Download</span>
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path
-                            d="M16 20c.3 0 .5-.1.7-.3l5.7-5.7-1.4-1.4-4 4V8h-2v8.6l-4-4L9.6 14l5.7 5.7c.2.2.4.3.7.3zM9 22h14v2H9z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        class="text-red-500 hover:text-red-600 rounded-full"
+                        class="text-red-500 hover:text-red-700 rounded-full"
                       >
                         <span class="sr-only">Delete</span>
                         <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
@@ -328,7 +403,7 @@
           </div>
         </div>
       </div>
-      <Pagination :total-items="temp.length" :start="1" :end="1" />
+      <!-- <Pagination :total-items="temp.length" :start="1" :end="1" /> -->
     </div>
   </Dashboard>
 </template>
@@ -338,10 +413,11 @@ import Dashboard from "./Dashboard.vue";
 import PopupModal from "../components/PopupModal.vue";
 import CreateNewButton from "../components/CreateNewButton.vue";
 import Pagination from "../partials/Pagination.vue";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data() {
     return {
-      invoices: this.$store.getters["accounting/getInvoices"],
       temp: [],
       allActive: true,
       paidActive: false,
@@ -351,40 +427,48 @@ export default {
       page: 0,
     };
   },
-
+  computed: {
+    ...mapGetters({
+      getInvoices: "accounting/getInvoices",
+      getCustomers: "auth/getUsers",
+    }),
+  },
   watch: {
-    temp() {},
     createInvoiceToggle() {},
     overdue() {},
   },
   methods: {
+    ...mapActions({
+      fetchInvoices: "accounting/fetchInvoices",
+      fetchCustomers: "auth/fetchCustomers",
+    }),
     showAllInvoices() {
       this.allActive = true;
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.invoices.all;
+      this.temp = this.getInvoices.all;
     },
     showOverdueInvoices() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = true;
-      this.temp = this.invoices.overdue;
+      this.temp = this.getInvoices.overdue;
     },
     showPaidInvoices() {
       this.allActive = false;
       this.paidActive = true;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.invoices.paid;
+      this.temp = this.getInvoices.paid;
     },
     showPendingInvoices() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = true;
       this.overdueActive = false;
-      this.temp = this.invoices.pending;
+      this.temp = this.getInvoices.pending;
     },
     toggleModal() {
       this.createActive = !this.createActive;
@@ -420,11 +504,14 @@ export default {
     if (this.$store.getters.getAuthToken === null) {
       this.$router.push("/login");
     }
-    this.$store.dispatch("accounting/fetchInvoices");
   },
   beforeMount() {
-    this.invoices = this.$store.getters["accounting/getInvoices"];
-    this.temp = this.$store.getters["accounting/getInvoices"];
+    let invoices = this.getInvoices;
+    this.temp = invoices.all;
+  },
+  created() {
+    this.fetchInvoices();
+    this.fetchCustomers();
   },
 
   components: { Dashboard, PopupModal, CreateNewButton, Pagination },

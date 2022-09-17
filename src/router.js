@@ -9,6 +9,7 @@ import Payments from "./pages/Payments.vue";
 import Suppliers from "./pages/Suppliers.vue";
 import Journal from "./pages/Journal.vue";
 import Inventory from "./pages/Inventory.vue";
+import Customers from "./pages/Customers.vue";
 import Nas from "./pages/Nas.vue";
 
 const routerHistory = createWebHistory();
@@ -36,6 +37,11 @@ const router = createRouter({
     {
       path: "/dashboard/profiles",
       component: Profiles,
+    },
+
+    {
+      path: "/dashboard/users/customers",
+      component: Customers,
     },
     {
       path: "/dashboard/ecommerce/invoices",

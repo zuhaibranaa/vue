@@ -1,6 +1,5 @@
 export default {
   setInvoices(state, payload) {
-    console.log(state.invoices);
     state.invoices.all = payload;
     state.invoices.paid = payload.filter((invoice) => {
       return invoice.invoice_status == "paid";
