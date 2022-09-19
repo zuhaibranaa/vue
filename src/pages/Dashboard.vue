@@ -50,7 +50,6 @@ export default {
     if (!this.$store.getters["auth/getAuthToken"]) {
       this.$router.push("/login");
     }
-    this.$store.dispatch("accounting/fetchDataFromServer");
   },
   created() {
     this.fetchCustomers();

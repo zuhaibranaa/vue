@@ -28,21 +28,16 @@ export default {
   async uploadNewSupplier(context, payload) {
     let data = await api.post("accounting/suppliers/", payload);
   },
-  async updateSupplier(_, payload) {
+  async updateSupplier({ dispatch }, _, payload) {
     await api.put("accounting/suppliers/", {
       data: payload,
     });
-
-    this.fetchSuppliers();
+    dispatch(this.fetchSuppliers);
   },
-  async deleteSupplier(context, id) {
+  async deleteSupplier({ dispatch }, context, id) {
     let response = await api.delete("accounting/suppliers/", {
       data: { id },
     });
-
-    context.commit(
-      "accounting/setSuppliers",
-      context.supplier.filter((supplier) => supplier.id !== id)
-    );
+    dispatch(this.fetchSuppliers);
   },
 };
