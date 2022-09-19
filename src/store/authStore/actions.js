@@ -11,10 +11,10 @@ export default {
     this.commit("auth/authToken", null);
     this.commit("auth/authUserCreds", null);
   },
-  async fetchCustomers() {
+  async fetchCustomers(context) {
     let response = await api.get("users/customers");
     if ((response.status = 200)) {
-      this.commit("auth/setUsers", response.data);
+      context.commit("auth/setUsers", response.data);
     }
   },
 };

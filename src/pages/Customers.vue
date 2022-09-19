@@ -21,7 +21,7 @@
               id="action-search"
               class="form-input pl-9 focus:border-gray-300"
               type="search"
-              placeholder="Search by Supplier ID…"
+              placeholder="Search by Customer ID…"
             />
             <button
               class="absolute inset-0 right-auto group"
@@ -44,7 +44,7 @@
           </form>
 
           <!-- Add member button -->
-          <PopupModal message="New Supplier" :showModal="createActive">
+          <PopupModal message="New Customer" :showModal="createActive">
             <template #footer>
               <button
                 class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -63,7 +63,7 @@
             </template>
             <template #button>
               <CreateNewButton
-                :message="'Create New Supplier'"
+                :message="'Create New Customer'"
                 @clickToggle="toggleModal"
               />
             </template>
@@ -170,9 +170,9 @@
       <div class="bg-white shadow-lg rounded-sm border border-gray-200 mb-8">
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
-            Suppliers
+            Customers
             <span class="text-gray-400 font-medium">{{
-              suppliersLength()
+              CustomersLength()
             }}</span>
           </h2>
         </header>
@@ -211,7 +211,7 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="supplier in getSuppliers" :key="supplier.id">
+                <tr v-for="supplier in getCustomers" :key="supplier.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -233,12 +233,12 @@
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-gray-800">
-                      {{ supplier.address }}
+                      {{ supplier.location }}
                     </div>
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>+92 {{ supplier.mobile }}</div>
+                    <div>+92 {{ supplier.phone }}</div>
                   </td>
 
                   <td
@@ -402,7 +402,7 @@
           </div>
         </div>
       </div>
-      <Pagination v-if="willPaginate()" :total-items="suppliersLength()" />
+      <Pagination v-if="willPaginate()" :total-items="CustomersLength()" />
       <!-- Pagination -->
     </div>
   </Dashboard>
@@ -433,21 +433,21 @@ export default {
       },
     };
   },
-  computed: mapGetters({ getSuppliers: "accounting/getSuppliers" }),
+  computed: mapGetters({ getCustomers: "auth/getUsers" }),
   methods: {
     ...mapActions({
-      fetchSuppliers: "accounting/fetchSuppliers",
+      fetchCustomers: "auth/fetchCustomers",
       deleteSupplier: "accounting/deleteSupplier",
       uploadSupplier: "accounting/uploadNewSupplier",
       updateSupplier: "accounting/updateSupplier",
       deleteSupplier: "accounting/deleteSupplier",
     }),
     willPaginate() {
-      return this.suppliersLength() > 10;
+      return this.CustomersLength() > 10;
     },
-    suppliersLength() {
-      let suppliers = this.getSuppliers;
-      return suppliers.length;
+    CustomersLength() {
+      let Customers = this.getCustomers;
+      return Customers.length;
     },
     doUpdate(payload) {
       this.updateSupplier(payload);
@@ -459,7 +459,7 @@ export default {
     },
     toggleUpdate(id) {
       if (id) {
-        let selected = this.getSuppliers.filter((supplier) => {
+        let selected = this.getCustomers.filter((supplier) => {
           return supplier.id == id;
         });
         this.update.id = selected[0].id;
@@ -513,7 +513,7 @@ export default {
     }
   },
   created() {
-    this.fetchSuppliers();
+    this.fetchCustomers();
   },
 
   components: {

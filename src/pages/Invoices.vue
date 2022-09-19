@@ -68,16 +68,22 @@
               />
             </template>
             <div>
-              <label for="price" class="block text-sm font-medium text-gray-700"
+              <label
+                for="customer"
+                class="block text-sm font-medium text-gray-700"
                 >Customer</label
               >
               <div class="relative mt-1 rounded-md shadow-sm">
                 <select
-                  id="currency"
-                  name="currency"
+                  id="customer"
+                  name="customer"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option v-for="customer in getCustomers" :key="customer.id">
+                  <option
+                    :value="customer.id"
+                    v-for="customer in getCustomers"
+                    :key="customer.id"
+                  >
                     {{ customer.email }}
                   </option>
                 </select>
@@ -93,6 +99,7 @@
                 <input
                   type="number"
                   name="discount"
+                  v-model="create.discount"
                   id="discount"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="0"
@@ -106,7 +113,8 @@
               <div class="relative mt-1 rounded-md shadow-sm">
                 <input
                   type="number"
-                  name="discount"
+                  name="total"
+                  v-model="create.total_amount"
                   id="total"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="0"
@@ -123,26 +131,45 @@
                 <select
                   id="status"
                   name="currency"
+                  v-model="create.invoice_status"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option>Paid</option>
-                  <option>Pending</option>
-                  <option>Overdue</option>
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                  <option value="overdue">Overdue</option>
                 </select>
               </div>
             </div>
 
             <div>
               <label
-                for="status"
+                for="description"
+                class="block text-sm font-medium text-gray-700"
+                >Description</label
+              >
+              <div class="relative mt-1 rounded-md shadow-sm">
+                <textarea
+                  type="number"
+                  name="description"
+                  v-model="create.description"
+                  id="description"
+                  class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                ></textarea>
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="issue_date"
                 class="block text-sm font-medium text-gray-700"
                 >Issue Date</label
               >
               <div class="relative mt-1 rounded-md shadow-sm">
                 <input
                   type="date"
-                  name="discount"
-                  id="total"
+                  v-model="create.billing_date"
+                  name="issue_date"
+                  id="issue_date"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="0"
                 />
@@ -150,15 +177,16 @@
             </div>
             <div>
               <label
-                for="status"
+                for="due_date"
                 class="block text-sm font-medium text-gray-700"
                 >Due Date</label
               >
               <div class="relative mt-1 rounded-md shadow-sm">
                 <input
                   type="date"
-                  name="discount"
-                  id="total"
+                  name="due_date"
+                  v-model="create.due_date"
+                  id="due_date"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="0"
                 />
@@ -425,6 +453,29 @@ export default {
       createActive: false,
       overdueActive: false,
       page: 0,
+      create: {
+        customer: null,
+        generated_by: null,
+        other_dues: null,
+        discount: null,
+        total_amount: null,
+        invoice_status: null,
+        billing_date: null,
+        due_date: null,
+        description: null,
+      },
+      update: {
+        id: null,
+        customer: null,
+        generated_by: null,
+        other_dues: null,
+        discount: null,
+        total_amount: null,
+        invoice_status: null,
+        billing_date: null,
+        due_date: null,
+        description: null,
+      },
     };
   },
   computed: {

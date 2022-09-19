@@ -28,6 +28,7 @@
 import { ref } from "vue";
 import Sidebar from "../partials/Sidebar.vue";
 import Header from "../partials/Header.vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Dashboard",
@@ -35,11 +36,25 @@ export default {
     Sidebar,
     Header,
   },
+  methods: {
+    ...mapActions({
+      fetchSuppliers: "accounting/fetchSuppliers",
+      fetchCustomers: "auth/fetchCustomers",
+      deleteSupplier: "accounting/deleteSupplier",
+      uploadSupplier: "accounting/uploadNewSupplier",
+      updateSupplier: "accounting/updateSupplier",
+      deleteSupplier: "accounting/deleteSupplier",
+    }),
+  },
   beforeCreate() {
     if (!this.$store.getters["auth/getAuthToken"]) {
       this.$router.push("/login");
     }
     this.$store.dispatch("accounting/fetchDataFromServer");
+  },
+  created() {
+    this.fetchCustomers();
+    this.fetchSuppliers();
   },
   setup() {
     const sidebarOpen = ref(false);

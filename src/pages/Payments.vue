@@ -197,9 +197,9 @@
       <div class="bg-white shadow-lg rounded-sm border border-gray-200 mb-8">
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
-            Invoices
+            Payments
             <span class="text-gray-400 font-medium">
-              {{ getInvoices.all.length }}
+              {{ getPayments.length }}
             </span>
           </h2>
         </header>
@@ -249,7 +249,7 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="invoice in temp" :key="invoice.id">
+                <tr v-for="invoice in getPayments" :key="invoice.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -261,9 +261,7 @@
                     </div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-medium text-green-500">
-                      {{ invoice.customer.name }}
-                    </div>
+                    <div class="font-medium text-green-500">customer.name</div>
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
@@ -284,7 +282,7 @@
                     </div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ invoice.generated_by.email }}</div>
+                    <div>generated_by.email</div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div>{{ generateDateFormat(invoice.created_at) }}</div>
@@ -377,7 +375,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getInvoices: "accounting/getInvoices",
+      getPayments: "accounting/getPayments",
       getCustomers: "auth/getUsers",
     }),
   },
@@ -387,7 +385,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchInvoices: "accounting/fetchInvoices",
+      fetchPayments: "accounting/fetchPayments",
       fetchCustomers: "auth/fetchCustomers",
     }),
     showAllInvoices() {
@@ -453,12 +451,8 @@ export default {
       this.$router.push("/login");
     }
   },
-  beforeMount() {
-    let invoices = this.getInvoices;
-    this.temp = invoices.all;
-  },
   created() {
-    this.fetchInvoices();
+    this.fetchPayments();
     this.fetchCustomers();
   },
 

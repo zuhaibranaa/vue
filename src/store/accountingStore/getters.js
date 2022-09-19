@@ -8,4 +8,7 @@ export default {
   getSuppliers(state) {
     return state.supplier;
   },
+  getPayments(state) {
+    return state.payments;
+  },
 };
