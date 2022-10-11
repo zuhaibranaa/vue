@@ -77,13 +77,10 @@
                 <select
                   id="customer"
                   name="customer"
+                  v-model="create.customer"
                   class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option
-                    :value="customer.id"
-                    v-for="customer in getCustomers"
-                    :key="customer.id"
-                  >
+                  <option v-for="customer in getCustomers" :key="customer.id">
                     {{ customer.email }}
                   </option>
                 </select>
@@ -278,8 +275,17 @@
         <header class="px-5 py-4">
           <h2 class="font-semibold text-gray-800">
             Invoices
-            <span class="text-gray-400 font-medium">
+            <span v-if="allActive" class="text-gray-400 font-medium">
               {{ getInvoices.all.length }}
+            </span>
+            <span v-else-if="paidActive" class="text-gray-400 font-medium">
+              {{ getInvoices.paid.length }}
+            </span>
+            <span v-else-if="dueActive" class="text-gray-400 font-medium">
+              {{ getInvoices.pending.length }}
+            </span>
+            <span v-else class="text-gray-400 font-medium">
+              {{ getInvoices.overdue.length }}
             </span>
           </h2>
         </header>
@@ -412,17 +418,44 @@
                           />
                         </svg>
                       </button>
-                      <button
-                        class="text-red-500 hover:text-red-700 rounded-full"
+                      <PopupModal
+                        :message="'Are You Sure You Want To Delete'"
+                        :show-modal="delOpen"
                       >
-                        <span class="sr-only">Delete</span>
-                        <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
-                          <path
-                            d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z"
-                          />
-                        </svg>
-                      </button>
+                        <template #button>
+                          <button
+                            @click="toggleDel()"
+                            class="text-red-500 hover:text-red-600 rounded-full"
+                          >
+                            <span class="sr-only">Delete</span>
+                            <svg
+                              class="w-8 h-8 fill-current"
+                              viewBox="0 0 32 32"
+                            >
+                              <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
+                              <path
+                                d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z"
+                              />
+                            </svg>
+                          </button>
+                        </template>
+                        <template #footer>
+                          <button
+                            class="text-green-500 bg-transparent border border-solid border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            @click="toggleDel"
+                          >
+                            Decline
+                          </button>
+                          <button
+                            class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            type="button"
+                            @click="del(invoice.id)"
+                          >
+                            Accept
+                          </button>
+                        </template>
+                      </PopupModal>
                     </div>
                   </td>
                 </tr>
@@ -446,20 +479,20 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
-      temp: [],
       allActive: true,
       paidActive: false,
       dueActive: false,
       createActive: false,
+      delOpen: false,
+      updateActive: false,
       overdueActive: false,
       page: 0,
       create: {
         customer: null,
-        generated_by: null,
-        other_dues: null,
-        discount: null,
-        total_amount: null,
-        invoice_status: null,
+        other_dues: 0,
+        discount: 0,
+        total_amount: 0,
+        invoice_status: [{ text: "Pending", value: "pending" }],
         billing_date: null,
         due_date: null,
         description: null,
@@ -467,10 +500,9 @@ export default {
       update: {
         id: null,
         customer: null,
-        generated_by: null,
-        other_dues: null,
-        discount: null,
-        total_amount: null,
+        other_dues: 0,
+        discount: 0,
+        total_amount: 0,
         invoice_status: null,
         billing_date: null,
         due_date: null,
@@ -479,9 +511,21 @@ export default {
     };
   },
   computed: {
+    temp() {
+      if (this.allActive) {
+        return this.getInvoices.all;
+      } else if (this.paidActive) {
+        return this.getInvoices.paid;
+      } else if (this.overdueActive) {
+        return this.getInvoices.overdue;
+      } else {
+        return this.getInvoices.pending;
+      }
+    },
     ...mapGetters({
       getInvoices: "accounting/getInvoices",
       getCustomers: "auth/getUsers",
+      getAuthUser: "auth/getAuthUser",
     }),
   },
   watch: {
@@ -489,37 +533,58 @@ export default {
     overdue() {},
   },
   methods: {
+    toggleDel() {
+      this.delOpen = !this.delOpen;
+      return this.delOpen;
+    },
     ...mapActions({
       fetchInvoices: "accounting/fetchInvoices",
+      uploadInvoice: "accounting/createInvoice",
+      deleteInvoice: "accounting/deleteInvoice",
       fetchCustomers: "auth/fetchCustomers",
     }),
+    storeNewInvoice() {
+      let formData = new FormData();
+      formData.append("customer", this.create.customer);
+      formData.append("generated_by", this.getAuthUser.id);
+      formData.append("other_dues", this.create.other_dues);
+      formData.append("discount", this.create.discount);
+      formData.append("total_amount", this.create.total_amount);
+      formData.append("invoice_status", this.create.invoice_status);
+      formData.append("billing_date", this.create.billing_date);
+      formData.append("due_date", this.create.due_date);
+      formData.append("description", this.create.description);
+
+      this.uploadInvoice(formData);
+      this.createActive = !this.createActive;
+    },
+    del(id) {
+      this.deleteInvoice(id);
+      this.toggleDel();
+    },
     showAllInvoices() {
       this.allActive = true;
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.getInvoices.all;
     },
     showOverdueInvoices() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = true;
-      this.temp = this.getInvoices.overdue;
     },
     showPaidInvoices() {
       this.allActive = false;
       this.paidActive = true;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.getInvoices.paid;
     },
     showPendingInvoices() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = true;
       this.overdueActive = false;
-      this.temp = this.getInvoices.pending;
     },
     toggleModal() {
       this.createActive = !this.createActive;
@@ -555,10 +620,6 @@ export default {
     if (this.$store.getters.getAuthToken === null) {
       this.$router.push("/login");
     }
-  },
-  beforeMount() {
-    let invoices = this.getInvoices;
-    this.temp = invoices.all;
   },
   created() {
     this.fetchInvoices();

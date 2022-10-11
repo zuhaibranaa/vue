@@ -18,6 +18,7 @@
     "jw-vue-pagination": "^1.0.3",
     "moment": "^2.29.4",
     "vue": "^3.2.20",
+    "vue-auto-logout": "^1.0.1",
     "vue-awesome-paginate": "^1.0.23",
     "vue-flatpickr-component": "^9.0.6",
     "vue-router": "^4.1.2",

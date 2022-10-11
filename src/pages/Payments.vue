@@ -21,7 +21,7 @@
               id="action-search"
               class="form-input pl-9 focus:border-gray-300"
               type="search"
-              placeholder="Search by invoice ID…"
+              placeholder="Search by payment ID…"
             />
             <button
               class="absolute inset-0 right-auto group"
@@ -44,7 +44,7 @@
           </form>
 
           <!-- Add member button -->
-          <PopupModal message="Create New Invoice" :showModal="createActive">
+          <PopupModal message="Create New payment" :showModal="createActive">
             <template #footer>
               <button
                 class="text-red-500 bg-transparent border border-solid border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -56,14 +56,14 @@
               <button
                 class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                @click="storeNewInvoice(update)"
+                @click="storeNewpayment(update)"
               >
                 Save
               </button>
             </template>
             <template #button>
               <CreateNewButton
-                :message="'Generate New Invoice'"
+                :message="'Make payment'"
                 @clickToggle="toggleModal"
               />
             </template>
@@ -218,28 +218,25 @@
                     <div class="flex items-center"></div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Invoice</div>
+                    <div class="font-semibold text-left">Payment</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Customer</div>
+                    <div class="font-semibold text-left">Amount</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Discount</div>
+                    <div class="font-semibold text-left">Method</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Total</div>
+                    <div class="font-semibold text-left">Description</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Status</div>
+                    <div class="font-semibold text-left">Invoice ID</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Issued by</div>
+                    <div class="font-semibold text-left">Paid by</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Issue date</div>
-                  </th>
-                  <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-semibold text-left">Due date</div>
+                    <div class="font-semibold text-left">Payment Date</div>
                   </th>
                   <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-semibold text-left">Actions</div>
@@ -249,7 +246,7 @@
               <!-- Table body -->
               <tbody class="text-sm divide-y divide-gray-200">
                 <!-- Row -->
-                <tr v-for="invoice in getPayments" :key="invoice.id">
+                <tr v-for="payment in getPayments" :key="payment.id">
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
                   >
@@ -257,40 +254,36 @@
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-orange-300">
-                      {{ "#" + invoice.id }}
+                      {{ "#" + payment.id }}
                     </div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="font-medium text-green-500">customer.name</div>
+                    <div class="font-medium text-green-500">
+                      {{ payment.amount }}
+                    </div>
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ invoice.discount }}</div>
+                    <div>{{ payment.method }}</div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div class="font-medium text-gray-800">
-                      {{ invoice.total_amount }}
+                      {{ payment.description }}
                     </div>
                   </td>
 
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                     <div
                       class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5"
-                      :class="statusClass(invoice.invoice_status)"
                     >
-                      {{ capitalizeString(invoice.invoice_status) }}
+                      {{ payment.invoice }}
                     </div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>generated_by.email</div>
+                    <div>{{ payment.paid_by }}</div>
                   </td>
                   <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div>{{ generateDateFormat(invoice.created_at) }}</div>
-                  </td>
-                  <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div class="flex items-center">
-                      <div>{{ generateDateFormat(invoice.due_date) }}</div>
-                    </div>
+                    <div>{{ generateDateFormat(payment.created_at) }}</div>
                   </td>
                   <td
                     class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px"
@@ -380,7 +373,7 @@ export default {
     }),
   },
   watch: {
-    createInvoiceToggle() {},
+    createpaymentToggle() {},
     overdue() {},
   },
   methods: {
@@ -388,33 +381,33 @@ export default {
       fetchPayments: "accounting/fetchPayments",
       fetchCustomers: "auth/fetchCustomers",
     }),
-    showAllInvoices() {
+    showAllpayments() {
       this.allActive = true;
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.getInvoices.all;
+      this.temp = this.getpayments.all;
     },
-    showOverdueInvoices() {
+    showOverduepayments() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = false;
       this.overdueActive = true;
-      this.temp = this.getInvoices.overdue;
+      this.temp = this.getpayments.overdue;
     },
-    showPaidInvoices() {
+    showPaidpayments() {
       this.allActive = false;
       this.paidActive = true;
       this.dueActive = false;
       this.overdueActive = false;
-      this.temp = this.getInvoices.paid;
+      this.temp = this.getpayments.paid;
     },
-    showPendingInvoices() {
+    showPendingpayments() {
       this.allActive = false;
       this.paidActive = false;
       this.dueActive = true;
       this.overdueActive = false;
-      this.temp = this.getInvoices.pending;
+      this.temp = this.getpayments.pending;
     },
     toggleModal() {
       this.createActive = !this.createActive;

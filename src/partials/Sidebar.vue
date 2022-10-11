@@ -536,6 +536,24 @@
                       >
                         <span
                           class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Areas</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                  <router-link
+                    to="/dashboard"
+                    custom
+                    v-slot="{ href, navigate }"
+                  >
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :href="href"
+                        @click="navigate"
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
                           >Managers</span
                         >
                       </a>

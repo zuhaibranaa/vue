@@ -26,18 +26,6 @@
                 placeholder="Password"
               />
             </div>
-            <div class="flex justify-between items-center mb-6">
-              <div class="form-group form-check">
-                <a
-                  style="cursor: pointer"
-                  @click.prevent=""
-                  class="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
-                >
-                  Forgot password?
-                  <br />
-                </a>
-              </div>
-            </div>
 
             <button
               @click.prevent="loginUser"
@@ -47,14 +35,14 @@
             >
               Sign in
             </button>
-            <router-link
-              to="/register"
-              className="inline-block px-7 mx-3 py-3 bg-green-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-green-700 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-150 ease-in-out w-half"
+            <button
+              @click.prevent=""
+              className="inline-block px-7 mx-3 py-3 text-red-100 bg-red-600 font-medium text-sm leading-snug uppercase shadow-md hover:bg-green-700 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-150 ease-in-out w-half"
               data-mdb-ripple="true"
               data-mdb-ripple-color="light"
             >
-              Register
-            </router-link>
+              forgot password?
+            </button>
           </form>
         </div>
       </div>
