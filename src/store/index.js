@@ -4,7 +4,7 @@ import accountingStore from "./accountingStore";
 import routerStore from "./routerStore";
 import VuexPersistence from "vuex-persist";
 const vuexLocal = new VuexPersistence({
-  storage: window.localStorage,
+  storage: window.sessionStorage,
 });
 export default createStore({
   modules: {

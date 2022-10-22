@@ -135,22 +135,26 @@
                 </a>
               </li>
             </router-link>
-            <!-- Reports -->
-            <router-link
-              to="/dashboard/reports"
-              custom
-              v-slot="{ href, navigate, isExactActive }"
+
+            <!-- Reports  -->
+            <SidebarLinkGroup
+              v-slot="parentLink"
+              :activeCondition="this.$route.fullPath.includes('ecommerce')"
             >
-              <li
-                class="px-3 py-2 rounded-sm mb-0.5 last:mb-0"
-                :class="isExactActive && 'bg-gray-900'"
+              <a
+                class="block text-gray-200 hover:text-white truncate transition duration-150"
+                :class="
+                  this.$route.fullPath.includes('eccommerce') &&
+                  'hover:text-gray-200'
+                "
+                href="#0"
+                @click.prevent="
+                  sidebarExpanded
+                    ? parentLink.handleClick()
+                    : (sidebarExpanded = true)
+                "
               >
-                <a
-                  class="block text-gray-200 hover:text-white truncate transition duration-150"
-                  :class="isExactActive && 'hover:text-gray-200'"
-                  :href="href"
-                  @click="navigate"
-                >
+                <div class="flex items-center justify-between">
                   <div class="flex items-center">
                     <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
                       <path
@@ -180,12 +184,48 @@
                     </svg>
                     <span
                       class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
-                      >Reports</span
-                    >
+                      >Reports
+                    </span>
                   </div>
-                </a>
-              </li>
-            </router-link>
+                  <!-- Icon -->
+                  <div class="flex shrink-0 ml-2">
+                    <svg
+                      class="w-3 h-3 shrink-0 ml-1 fill-current text-gray-400"
+                      :class="parentLink.expanded && 'transform rotate-180'"
+                      viewBox="0 0 12 12"
+                    >
+                      <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+              <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                <ul class="pl-9 mt-1" :class="!parentLink.expanded && 'hidden'">
+                  <router-link
+                    to="/dashboard/ecommerce/invoices"
+                    custom
+                    v-slot="{ href, navigate, isExactActive }"
+                  >
+                    <li class="mb-1 last:mb-0">
+                      <a
+                        class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
+                        :class="isExactActive && 'text-indigo-400'"
+                        :href="href"
+                        @click="navigate"
+                        @mouseover="
+                          this.$store.dispatch('accounting/fetchInvoices')
+                        "
+                      >
+                        <span
+                          class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200"
+                          >Payment Report</span
+                        >
+                      </a>
+                    </li>
+                  </router-link>
+                </ul>
+              </div>
+            </SidebarLinkGroup>
             <!-- E-Commerce  -->
             <SidebarLinkGroup
               v-slot="parentLink"
@@ -524,12 +564,13 @@
               <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
                 <ul class="pl-9 mt-1" :class="!parentLink.expanded && 'hidden'">
                   <router-link
-                    to="/dashboard"
+                    to="/dashboard/users/area"
                     custom
-                    v-slot="{ href, navigate }"
+                    v-slot="{ href, navigate, isExactActive }"
                   >
                     <li class="mb-1 last:mb-0">
                       <a
+                        :class="isExactActive && 'text-indigo-400'"
                         class="block text-gray-400 hover:text-gray-200 transition duration-150 truncate"
                         :href="href"
                         @click="navigate"

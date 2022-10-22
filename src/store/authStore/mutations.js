@@ -8,4 +8,10 @@ export default {
   setUsers(state, payload) {
     state.customers = payload;
   },
+  setAreas(state, payload) {
+    state.areas = payload;
+  },
+  setSubAreas(state, payload) {
+    state.subAreas = payload;
+  },
 };

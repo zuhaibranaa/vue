@@ -6,4 +6,6 @@ export default {
     return state.authUserCreds;
   },
   getUsers: (state) => state.customers,
+  getAreas: (state) => state.areas,
+  getSubAreas: (state) => state.subAreas,
 };

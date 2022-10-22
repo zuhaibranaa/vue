@@ -32,7 +32,9 @@ export default {
   },
   async fetchSuppliers(context) {
     // Fetch Suppliers
+
     let data = await api.get("accounting/suppliers/");
+
     context.commit("setSuppliers", data.data);
   },
   async uploadNewSupplier(context, payload, { dispatch }) {
